@@ -161,8 +161,8 @@ If you develop or deploy using Docker, we provide configuration for you.
 Prepare your development environment using [docker compose](https://docs.docker.com/compose/install/):
 
 ```bash
-$ git clone https://github.com/zfcampus/zf-apigility-skeleton
-$ cd zf-apigility-skeleton
+$ git clone https://github.com/im-bart/perpetuum-api
+$ cd perpetuum-api
 $ docker-compose build
 # Install dependencies via composer, if you haven't already:
 $ docker-compose run apigility composer install
