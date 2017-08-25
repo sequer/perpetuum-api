@@ -14,7 +14,7 @@ Please see the [composer.json](composer.json) file.
 First, clone the repository:
 
 ```bash
-# git clone https://github.com/zfcampus/zf-apigility-skeleton.git # optionally, specify the directory in which to clone
+# git clone https://github.com/im-bart/perpetuum-api.git # optionally, specify the directory in which to clone
 $ cd path/to/install
 ```
 
