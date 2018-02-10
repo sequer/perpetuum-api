@@ -18,11 +18,6 @@ class Account
 	protected $id;
 
 	/**
-	 * @ORM\Column(name="email", type="string")
-	 */
-	protected $email;
-
-	/**
 	 * @ORM\OneToMany(targetEntity="Character", mappedBy="account")
 	 */
 	protected $characters;
