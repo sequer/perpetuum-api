@@ -20,12 +20,45 @@ return [
                     ],
                 ],
             ],
+            'onboarding.rpc.register' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/onboarding/register',
+                    'defaults' => [
+                        'controller' => 'Onboarding\\V1\\Rpc\\Register\\Controller',
+                        'action' => 'register',
+                    ],
+                ],
+            ],
+            'onboarding.rpc.verify' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/onboarding/verify/:token',
+                    'defaults' => [
+                        'controller' => 'Onboarding\\V1\\Rpc\\Verify\\Controller',
+                        'action' => 'verify',
+                    ],
+                ],
+            ],
+            'onboarding.rpc.reset' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/onboarding/reset[/:token]',
+                    'defaults' => [
+                        'controller' => 'Onboarding\\V1\\Rpc\\Reset\\Controller',
+                        'action' => 'reset',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-versioning' => [
         'uri' => [
             0 => 'onboarding.rest.doctrine.account',
             1 => 'onboarding.rest.doctrine.character',
+            2 => 'onboarding.rpc.register',
+            3 => 'onboarding.rpc.verify',
+            4 => 'onboarding.rpc.reset',
         ],
     ],
     'zf-rest' => [
@@ -76,6 +109,9 @@ return [
         'controllers' => [
             'Onboarding\\V1\\Rest\\Account\\Controller' => 'HalJson',
             'Onboarding\\V1\\Rest\\Character\\Controller' => 'HalJson',
+            'Onboarding\\V1\\Rpc\\Register\\Controller' => 'Json',
+            'Onboarding\\V1\\Rpc\\Verify\\Controller' => 'Json',
+            'Onboarding\\V1\\Rpc\\Reset\\Controller' => 'Json',
         ],
         'accept_whitelist' => [
             'Onboarding\\V1\\Rest\\Account\\Controller' => [
@@ -88,6 +124,21 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Onboarding\\V1\\Rpc\\Register\\Controller' => [
+                0 => 'application/vnd.onboarding.v1+json',
+                1 => 'application/json',
+                2 => 'application/*+json',
+            ],
+            'Onboarding\\V1\\Rpc\\Verify\\Controller' => [
+                0 => 'application/vnd.onboarding.v1+json',
+                1 => 'application/json',
+                2 => 'application/*+json',
+            ],
+            'Onboarding\\V1\\Rpc\\Reset\\Controller' => [
+                0 => 'application/vnd.onboarding.v1+json',
+                1 => 'application/json',
+                2 => 'application/*+json',
+            ],
         ],
         'content_type_whitelist' => [
             'Onboarding\\V1\\Rest\\Account\\Controller' => [
@@ -95,6 +146,18 @@ return [
                 1 => 'application/json',
             ],
             'Onboarding\\V1\\Rest\\Character\\Controller' => [
+                0 => 'application/vnd.onboarding.v1+json',
+                1 => 'application/json',
+            ],
+            'Onboarding\\V1\\Rpc\\Register\\Controller' => [
+                0 => 'application/vnd.onboarding.v1+json',
+                1 => 'application/json',
+            ],
+            'Onboarding\\V1\\Rpc\\Verify\\Controller' => [
+                0 => 'application/vnd.onboarding.v1+json',
+                1 => 'application/json',
+            ],
+            'Onboarding\\V1\\Rpc\\Reset\\Controller' => [
                 0 => 'application/vnd.onboarding.v1+json',
                 1 => 'application/json',
             ],
@@ -144,7 +207,7 @@ return [
             'object_manager' => 'doctrine.entitymanager.orm_default',
             'by_value' => false,
             'strategies' => [
-                'characters' => 'ZF\Doctrine\Hydrator\Strategy\CollectionExtract',
+                'characters' => \ZF\Doctrine\Hydrator\Strategy\CollectionExtract::class,
             ],
             'use_generated_hydrator' => true,
         ],
@@ -153,7 +216,7 @@ return [
             'object_manager' => 'doctrine.entitymanager.orm_default',
             'by_value' => false,
             'strategies' => [
-                'account' => 'ZF\Doctrine\Hydrator\Strategy\EntityLink',
+                'account' => \ZF\Doctrine\Hydrator\Strategy\EntityLink::class,
             ],
             'use_generated_hydrator' => true,
         ],
@@ -164,6 +227,12 @@ return [
         ],
         'Onboarding\\V1\\Rest\\Character\\Controller' => [
             'input_filter' => 'Onboarding\\V1\\Rest\\Character\\Validator',
+        ],
+        'Onboarding\\V1\\Rpc\\Register\\Controller' => [
+            'input_filter' => 'Onboarding\\V1\\Rpc\\Register\\Validator',
+        ],
+        'Onboarding\\V1\\Rpc\\Reset\\Controller' => [
+            'input_filter' => 'Onboarding\\V1\\Rpc\\Reset\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -215,6 +284,59 @@ return [
                 'filters' => [],
                 'validators' => [],
             ],
+        ],
+        'Onboarding\\V1\\Rpc\\Register\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Zend\Validator\EmailAddress::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [],
+                'name' => 'email',
+                'description' => 'The email address.',
+            ],
+        ],
+        'Onboarding\\V1\\Rpc\\Reset\\Validator' => [
+            0 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'password',
+                'description' => 'The password.',
+            ],
+        ],
+    ],
+    'controllers' => [
+        'factories' => [
+            'Onboarding\\V1\\Rpc\\Register\\Controller' => \Onboarding\V1\Rpc\Register\RegisterControllerFactory::class,
+            'Onboarding\\V1\\Rpc\\Verify\\Controller' => \Onboarding\V1\Rpc\Verify\VerifyControllerFactory::class,
+            'Onboarding\\V1\\Rpc\\Reset\\Controller' => \Onboarding\V1\Rpc\Reset\ResetControllerFactory::class,
+        ],
+    ],
+    'zf-rpc' => [
+        'Onboarding\\V1\\Rpc\\Register\\Controller' => [
+            'service_name' => 'register',
+            'http_methods' => [
+                0 => 'POST',
+            ],
+            'route_name' => 'onboarding.rpc.register',
+        ],
+        'Onboarding\\V1\\Rpc\\Verify\\Controller' => [
+            'service_name' => 'verify',
+            'http_methods' => [
+                0 => 'POST',
+            ],
+            'route_name' => 'onboarding.rpc.verify',
+        ],
+        'Onboarding\\V1\\Rpc\\Reset\\Controller' => [
+            'service_name' => 'reset',
+            'http_methods' => [
+                0 => 'POST',
+            ],
+            'route_name' => 'onboarding.rpc.reset',
         ],
     ],
 ];
