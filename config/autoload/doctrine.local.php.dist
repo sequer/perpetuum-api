@@ -1,33 +1,106 @@
 <?php
 
+// return [
+// 	'doctrine' => [
+// 		'connection' => [
+// 			'orm_default' => [
+// 				'driverClass' => \Doctrine\DBAL\Driver\Sqlsrv\Driver::class,
+// 				'params' => [
+// 					'dbname' => '',
+// 					'user' => '',
+// 					'password' => '',
+// 					'host' => ' localhost\PERPSQL',
+// 					'port' => null,
+// 				],
+// 			],
+// 		],
+// 		'driver' => [
+// 			'onboarding_annotation_driver' => [
+// 				'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
+// 				'cache' => 'array',
+// 				'paths' => __DIR__.'/../../module/Onboarding/src/Entity',
+// 			],
+// 			'orm_default' => [
+// 				'drivers' => [
+// 					'Onboarding\Entity' => 'onboarding_annotation_driver',
+// 				],
+// 			],
+
+// 		],
+// 	],
+// ];
+
 return [
-	'doctrine' => [
-		'connection' => [
-			'orm_default' => [
-				'driverClass' => \Doctrine\DBAL\Driver\Sqlsrv\Driver::class,
-				'params' => [
-					'dbname' => '',
-					'user' => '',
-					'password' => '',
-					'host' => ' localhost\PERPSQL',
-					'port' => null,
-				],
-			],
-		],
-		'driver' => [
-			
-			'onboarding_annotation_driver' => [
-				'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
-				'cache' => 'array',
-				'paths' => __DIR__.'/../../module/Onboarding/src/Entity',
-			],
-
-			'orm_default' => [
-				'drivers' => [
-					'Onboarding\Entity' => 'onboarding_annotation_driver',
-				],
-			],
-
-		],
-	],
+    'doctrine' => [
+        'connection' => [
+            'orm_default' => [
+                'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+                'params' => [
+                    'host'     => 'localhost',
+                    'port'     => '3306',
+                    'user'     => 'user',
+                    'password' => 'pass',
+                    'dbname'   => 'perpetuum_orm_default',
+                ]
+            ],
+            'orm_sqlsrv' => [
+                'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+                'params' => [
+                    'host'     => 'localhost',
+                    'port'     => '3306',
+                    'user'     => 'user',
+                    'password' => 'pass',
+                    'dbname'   => 'perpetuum_orm_sqlsrv',
+                ]
+            ],
+        ],
+        'entitymanager' => [
+            'orm_default' => [
+                'connection'    => 'orm_default',
+                'configuration' => 'orm_default'
+            ],
+            'orm_sqlsrv' => [
+                'connection'    => 'orm_sqlsrv',
+                'configuration' => 'orm_sqlsrv'
+            ]
+        ],
+       'configuration' => [
+            'orm_sqlsrv' => [
+                'metadata_cache'    => 'array',
+                'query_cache'       => 'array',
+                'result_cache'      => 'array',
+                'driver'            => 'orm_sqlsrv',
+                'generate_proxies'  => true,
+                'proxy_dir'         => 'data/DoctrineORMModule/Proxy',
+                'proxy_namespace'   => 'DoctrineORMModule\Proxy',
+                'filters'           => [],
+            ]
+        ],
+        'driver' => [
+            'orm_driver' => [
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => [
+                	__DIR__.'/../../module/Application/src/Entity'
+                ],
+            ],
+            'orm_driver_sqlsrv' => [
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => [
+                	__DIR__.'/../../module/Onboarding/src/Entity'
+                ],
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    'Application\Entity' => 'orm_driver'
+                ]
+            ],
+            'orm_sqlsrv' => [
+                'drivers' => [
+                    'Onboarding\Entity' => 'orm_driver_sqlsrv'
+                ]
+            ],
+        ],
+    ],
 ];

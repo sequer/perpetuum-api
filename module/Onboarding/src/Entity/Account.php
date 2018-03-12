@@ -11,29 +11,29 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Account
 {
-	/**
-	 * @ORM\Id
-	 * @ORM\Column(name="accountID", type="integer")
-	 */
-	protected $id;
+    /**
+     * @ORM\Id
+     * @ORM\Column(name="accountID", type="integer")
+     */
+    protected $id;
 
-	/**
-	 * @ORM\Column(name="email", type="string")
-	 */
-	protected $email;
+    /**
+     * @ORM\Column(name="email", type="string")
+     */
+    protected $email;
 
-	/**
-	 * @ORM\OneToMany(targetEntity="Character", mappedBy="account")
-	 */
-	protected $characters;
+    /**
+     * @ORM\OneToMany(targetEntity="Character", mappedBy="account")
+     */
+    protected $characters;
 
-	public function __construct()
-	{
-		$this->characters = new ArrayCollection();
-	}
+    public function __construct()
+    {
+        $this->characters = new ArrayCollection();
+    }
 
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 }

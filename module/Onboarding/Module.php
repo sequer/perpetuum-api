@@ -21,4 +21,16 @@ class Module implements ApigilityProviderInterface
             ],
         ];
     }
+
+    public function getServiceConfig()
+    {
+        return [
+            'factories' => [
+                'doctrine.connection.orm_sqlsrv' => new \DoctrineORMModule\Service\DBALConnectionFactory('orm_sqlsrv'),
+                'doctrine.configuration.orm_sqlsrv' => new \DoctrineORMModule\Service\ConfigurationFactory('orm_sqlsrv'),
+                'doctrine.entitymanager.orm_sqlsrv' => new \DoctrineORMModule\Service\EntityManagerFactory('orm_sqlsrv'),
+                'doctrine.driver.orm_sqlsrv' => new \DoctrineModule\Service\DriverFactory('orm_sqlsrv'),
+            ],
+        ];
+    }
 }

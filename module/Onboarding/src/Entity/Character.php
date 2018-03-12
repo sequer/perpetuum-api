@@ -11,35 +11,35 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Character
 {
-	/**
-	 * @ORM\Id
-	 * @ORM\Column(name="characterID", type="integer")
-	 */
-	protected $id;
+    /**
+     * @ORM\Id
+     * @ORM\Column(name="characterID", type="integer")
+     */
+    protected $id;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Account", inversedBy="characters")
-	 * @ORM\JoinColumn(name="accountID", referencedColumnName="accountID")
-	 */
-	protected $account;
+    /**
+     * @ORM\ManyToOne(targetEntity="Account", inversedBy="characters")
+     * @ORM\JoinColumn(name="accountID", referencedColumnName="accountID")
+     */
+    protected $account;
 
-	/**
-	 * @ORM\Column(name="nick", type="string")
-	 */
-	protected $name;
+    /**
+     * @ORM\Column(name="nick", type="string")
+     */
+    protected $name;
 
-	/**
-	 * @ORM\Column(name="creation", type="datetime")
-	 */
-	protected $createdOn;
+    /**
+     * @ORM\Column(name="creation", type="datetime")
+     */
+    protected $createdOn;
 
-	public function getId(): ?int
-	{
-		return $this->id;
-	}
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
-	public function getAccount(): ?Account
-	{
-		return $this->account;
-	}
+    public function getAccount(): ?Account
+    {
+        return $this->account;
+    }
 }
