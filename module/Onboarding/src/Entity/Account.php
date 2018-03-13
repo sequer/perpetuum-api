@@ -23,6 +23,11 @@ class Account
     protected $email;
 
     /**
+     * @ORM\Column(name="emailConfirmed", type="boolean")
+     */
+    protected $hasEmailConfirmed;
+
+    /**
      * @ORM\OneToMany(targetEntity="Character", mappedBy="account")
      */
     protected $characters;
@@ -32,8 +37,28 @@ class Account
         $this->characters = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function setHasEmailConfirmed($hasEmailConfirmed)
+    {
+        $this->hasEmailConfirmed = $hasEmailConfirmed;
+    }
+
+    public function getHasEmailConfirmed()
+    {
+        return $this->hasConfirmedEmail;
     }
 }
