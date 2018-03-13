@@ -30,6 +30,8 @@ class Module implements ApigilityProviderInterface
                 'doctrine.configuration.orm_sqlsrv' => new \DoctrineORMModule\Service\ConfigurationFactory('orm_sqlsrv'),
                 'doctrine.entitymanager.orm_sqlsrv' => new \DoctrineORMModule\Service\EntityManagerFactory('orm_sqlsrv'),
                 'doctrine.driver.orm_sqlsrv' => new \DoctrineModule\Service\DriverFactory('orm_sqlsrv'),
+                'doctrine.eventmanager.orm_sqlsrv' => new \DoctrineModule\Service\EventManagerFactory('orm_sqlsrv'),
+                'doctrine.entity_resolver.orm_sqlsrv' => new \DoctrineORMModule\Service\EntityResolverFactory('orm_sqlsrv'),
             ],
         ];
     }

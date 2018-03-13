@@ -23,9 +23,26 @@ return [
             ],
         ],
     ],
+    'console' => [
+        'router' => [
+            'routes' => [
+                'debug' => [
+                    'type' => 'simple',
+                    'options' => [
+                        'route' => 'debug',
+                        'defaults' => [
+                            'controller' => Controller\IndexController::class,
+                            'action' => 'debug',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => InvokableFactory::class,
+            // Controller\IndexController::class => InvokableFactory::class,
+            Controller\IndexController::class => Controller\IndexControllerFactory::class,
         ],
     ],
     'view_manager' => [

@@ -14,6 +14,7 @@ return [
     'Zend\\Paginator',
     'Zend\\Router',
     'Zend\\Validator',
+    'Zend\\Mvc\\Console',
     'ZF\\Apigility',
     'ZF\\Apigility\\Documentation',
     'ZF\\ApiProblem',
