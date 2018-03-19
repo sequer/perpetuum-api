@@ -12,9 +12,12 @@ use ZF\Apigility\Admin\Module as AdminModule;
 
 class IndexController extends AbstractActionController
 {
-    public function __construct($defaultEntityManager, $perpetuumEntityManager)
+    private $entityManager;
+    private $perpetuumEntityManager;
+
+    public function __construct($entityManager, $perpetuumEntityManager)
     {
-        $this->defaultEntityManager = $defaultEntityManager;
+        $this->entityManager = $entityManager;
         $this->perpetuumEntityManager = $perpetuumEntityManager;
     }
 
@@ -28,12 +31,6 @@ class IndexController extends AbstractActionController
 
     public function debugAction()
     {
-        $entity = new \Onboarding\Entity\Entity();
-        $this->perpetuumEntityManager->persist($entity);
-        $this->perpetuumEntityManager->flush();
 
-        $entity = new \Application\Entity\Entity();
-        $this->defaultEntityManager->persist($entity);
-        $this->defaultEntityManager->flush();
     }
 }

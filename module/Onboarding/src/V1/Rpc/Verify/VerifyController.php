@@ -7,5 +7,6 @@ class VerifyController extends AbstractActionController
 {
     public function verifyAction()
     {
+        $hash = $this->getBodyParam('hash');
     }
 }

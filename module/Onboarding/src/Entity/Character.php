@@ -42,4 +42,24 @@ class Character
     {
         return $this->account;
     }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+    }
+
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
 }

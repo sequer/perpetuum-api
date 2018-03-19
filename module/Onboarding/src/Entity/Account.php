@@ -23,6 +23,11 @@ class Account
     protected $email;
 
     /**
+     * @ORM\Column(name="password", type="string")
+     */
+    protected $password;
+
+    /**
      * @ORM\Column(name="emailConfirmed", type="boolean")
      */
     protected $hasEmailConfirmed;
@@ -50,6 +55,16 @@ class Account
     public function getEmail()
     {
         return $this->email;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
     }
 
     public function setHasEmailConfirmed($hasEmailConfirmed)

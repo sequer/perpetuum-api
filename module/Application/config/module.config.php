@@ -41,8 +41,8 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            // Controller\IndexController::class => InvokableFactory::class,
             Controller\IndexController::class => Controller\IndexControllerFactory::class,
+            'Application\Service\SparkPost' => Service\SparkPost\SparkPostFactory::class,
         ],
     ],
     'view_manager' => [
