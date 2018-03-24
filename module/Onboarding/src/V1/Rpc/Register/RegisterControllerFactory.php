@@ -7,7 +7,8 @@ class RegisterControllerFactory
     {
         return new RegisterController(
             $container->get('doctrine.entitymanager.orm_default'),
-            $container->get('doctrine.entitymanager.orm_sqlsrv')
+            $container->get('doctrine.entitymanager.orm_sqlsrv'),
+            $container->get('SparkPost')
         );
     }
 }

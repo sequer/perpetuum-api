@@ -5,15 +5,12 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- */
-class Entity
+abstract class Entity
 {
     /**
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
      */
     protected $id;
 

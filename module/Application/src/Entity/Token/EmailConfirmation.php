@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class EmailConfirmation extends Token
+class EmailConfirmation extends \Application\Entity\Token
 {
     /**
      * @ORM\Column(type="string")

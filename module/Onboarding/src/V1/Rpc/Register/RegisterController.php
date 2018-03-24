@@ -27,15 +27,14 @@ class RegisterController extends AbstractActionController
         $account->setEmail($email);
         $account->setPassword(sha1($password));
         $account->setHasEmailConfirmed(false);
+        $this->perpetuumEntityManager->persist($account);
 
         $token = new EmailConfirmationToken();
         $token->setHash(bin2hex(openssl_random_pseudo_bytes(16)));
         $token->setEmail($email);
-
-        $this->perpetuumEntityManager->persist($account);
-        $this->perpetuumEntityManager->flush();
-
         $this->entityManager->persist($token);
+
+        $this->perpetuumEntityManager->flush();
         $this->entityManager->flush();
 
         $response = $this->sendActivationMail($account, $token);
@@ -43,19 +42,19 @@ class RegisterController extends AbstractActionController
         return $this->getResponse()->setStatusCode(204);
     }
 
-    private function sendActivationMail(Account $account, EmailConfirmation $token)
+    private function sendActivationMail(Account $account, EmailConfirmationToken $token)
     {
         return $this->sparkPost->transmissions->post([
             'content' => [
                 'from' => [
                     'name' => 'Open Perpetuum Team',
-                    'email' => 'no-reply@openperpetuum.com',
+                    'email' => 'no-reply@mail.openperpetuum.com',
                 ],
                 'subject' => 'Activate your account',
-                'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p>Click <a href="/activate/{{hash}}">here</a> to activate your account.</body></html>',
+                'html' => '<html><body><p>Hi there! Click <a href="http://register.openperpetuum.com/activate/?token={{token}}">here</a> to activate your account.</p></body></html>',
             ],
             'substitution_data' => [
-                'token' => $token->getHash()
+                'token' => $token->getHash(),
             ],
             'recipients' => [
                 [

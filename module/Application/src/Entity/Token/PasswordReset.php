@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class PasswordReset extends Token
+class PasswordReset extends \Application\Entity\Token
 {
 
 }

@@ -13,6 +13,7 @@ class Account
 {
     /**
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="accountID", type="integer")
      */
     protected $id;

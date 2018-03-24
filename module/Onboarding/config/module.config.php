@@ -1,4 +1,7 @@
 <?php
+
+namespace Onboarding;
+
 return [
     'router' => [
         'routes' => [
@@ -33,7 +36,7 @@ return [
             'onboarding.rpc.verify' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route' => '/onboarding/verify/:token',
+                    'route' => '/onboarding/verify',
                     'defaults' => [
                         'controller' => 'Onboarding\\V1\\Rpc\\Verify\\Controller',
                         'action' => 'verify',
@@ -50,6 +53,11 @@ return [
                     ],
                 ],
             ],
+        ],
+    ],
+    'validators' => [
+        'factories' => [
+            \Onboarding\Validator\NoObjectExists::class => \Onboarding\Validator\NoObjectExistsFactory::class,
         ],
     ],
     'zf-versioning' => [
@@ -89,13 +97,9 @@ return [
             'collection_name' => 'character',
             'entity_http_methods' => [
                 0 => 'GET',
-                1 => 'PATCH',
-                2 => 'PUT',
-                3 => 'DELETE',
             ],
             'collection_http_methods' => [
                 0 => 'GET',
-                1 => 'POST',
             ],
             'collection_query_whitelist' => [],
             'page_size' => 25,
@@ -231,6 +235,9 @@ return [
         'Onboarding\\V1\\Rpc\\Register\\Controller' => [
             'input_filter' => 'Onboarding\\V1\\Rpc\\Register\\Validator',
         ],
+        'Onboarding\\V1\\Rpc\\Verify\\Controller' => [
+            'input_filter' => 'Onboarding\\V1\\Rpc\\Verify\\Validator',
+        ],
         'Onboarding\\V1\\Rpc\\Reset\\Controller' => [
             'input_filter' => 'Onboarding\\V1\\Rpc\\Reset\\Validator',
         ],
@@ -293,10 +300,33 @@ return [
                         'name' => \Zend\Validator\EmailAddress::class,
                         'options' => [],
                     ],
+                    1 => [
+                        'name' => \Onboarding\Validator\NoObjectExists::class,
+                        'options' => [
+                            'object_repository' => \Onboarding\Entity\Account::class,
+                            'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
+                            'fields' => ['email'],
+                        ]
+
+                    ]
                 ],
                 'filters' => [],
                 'name' => 'email',
                 'description' => 'The email address.',
+            ],
+            1 => [
+                'name' => 'password',
+                'description' => 'The password.',
+                'required' => true,
+            ],
+        ],
+        'Onboarding\\V1\\Rpc\\Verify\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'hash',
+                'description' => 'The hash.',
             ],
         ],
         'Onboarding\\V1\\Rpc\\Reset\\Validator' => [
