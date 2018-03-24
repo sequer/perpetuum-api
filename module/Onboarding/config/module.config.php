@@ -192,11 +192,11 @@ return [
     'zf-apigility' => [
         'doctrine-connected' => [
             \Onboarding\V1\Rest\Account\AccountResource::class => [
-                'object_manager' => 'doctrine.entitymanager.orm_default',
+                'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
                 'hydrator' => 'Onboarding\\V1\\Rest\\Account\\AccountHydrator',
             ],
             \Onboarding\V1\Rest\Character\CharacterResource::class => [
-                'object_manager' => 'doctrine.entitymanager.orm_default',
+                'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
                 'hydrator' => 'Onboarding\\V1\\Rest\\Character\\CharacterHydrator',
             ],
         ],
@@ -204,7 +204,7 @@ return [
     'doctrine-hydrator' => [
         'Onboarding\\V1\\Rest\\Account\\AccountHydrator' => [
             'entity_class' => \Onboarding\Entity\Account::class,
-            'object_manager' => 'doctrine.entitymanager.orm_default',
+            'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
             'by_value' => false,
             'strategies' => [
                 'characters' => \ZF\Doctrine\Hydrator\Strategy\CollectionExtract::class,
@@ -213,7 +213,7 @@ return [
         ],
         'Onboarding\\V1\\Rest\\Character\\CharacterHydrator' => [
             'entity_class' => \Onboarding\Entity\Character::class,
-            'object_manager' => 'doctrine.entitymanager.orm_default',
+            'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
             'by_value' => false,
             'strategies' => [
                 'account' => \ZF\Doctrine\Hydrator\Strategy\EntityLink::class,
