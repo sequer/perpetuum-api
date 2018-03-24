@@ -1,7 +1,4 @@
 <?php
-
-namespace Onboarding;
-
 return [
     'router' => [
         'routes' => [
@@ -36,7 +33,7 @@ return [
             'onboarding.rpc.verify' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route' => '/onboarding/verify',
+                    'route' => '/onboarding/verify/:token',
                     'defaults' => [
                         'controller' => 'Onboarding\\V1\\Rpc\\Verify\\Controller',
                         'action' => 'verify',
@@ -305,10 +302,11 @@ return [
                         'options' => [
                             'object_repository' => \Onboarding\Entity\Account::class,
                             'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
-                            'fields' => ['email'],
-                        ]
-
-                    ]
+                            'fields' => [
+                                0 => 'email',
+                            ],
+                        ],
+                    ],
                 ],
                 'filters' => [],
                 'name' => 'email',
@@ -320,15 +318,7 @@ return [
                 'required' => true,
             ],
         ],
-        'Onboarding\\V1\\Rpc\\Verify\\Validator' => [
-            0 => [
-                'required' => true,
-                'validators' => [],
-                'filters' => [],
-                'name' => 'hash',
-                'description' => 'The hash.',
-            ],
-        ],
+        'Onboarding\\V1\\Rpc\\Verify\\Validator' => [],
         'Onboarding\\V1\\Rpc\\Reset\\Validator' => [
             0 => [
                 'required' => false,

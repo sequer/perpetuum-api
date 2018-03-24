@@ -17,23 +17,22 @@ class VerifyController extends AbstractActionController
 
     public function verifyAction()
     {
-        $hash = $this->bodyParam('hash');
-
         $token = $this->entityManager->getRepository(EmailConfirmationToken::class)->findOneBy([
-        	'hash' => $hash, 
-        	'consumedOn' => null
+        	'hash' => $this->routeParam('token'), 
+        	'consumedOn' => null,
         ]);
 
         if (!$token) {
-        	return new ApiProblemResponse(new ApiProblem(404, 'Entity not found'));
+        	return new ApiProblemResponse(new ApiProblem(404, 'Entity (token) not found.'));
         }
 
         $account = $this->perpetuumEntityManager->getRepository(Account::class)->findOneBy([
         	'email' => $token->getEmail(),
+        	'hasEmailConfirmed' => false,
         ]);
 
         if (!$account) {
-        	return new ApiProblemResponse(new ApiProblem(404, 'Entity not found'));
+        	return new ApiProblemResponse(new ApiProblem(404, 'Entity (account) not found.'));
         }
 
         $token->setConsumedOn(new DateTime('now'));

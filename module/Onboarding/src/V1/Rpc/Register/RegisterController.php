@@ -39,7 +39,7 @@ class RegisterController extends AbstractActionController
 
         $response = $this->sendActivationMail($account, $token);
 
-        return $this->getResponse()->setStatusCode(204);
+        return $this->getResponse()->setStatusCode(201);
     }
 
     private function sendActivationMail(Account $account, EmailConfirmationToken $token)
