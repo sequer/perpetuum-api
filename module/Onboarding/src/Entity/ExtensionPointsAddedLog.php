@@ -3,11 +3,13 @@
 namespace Onboarding\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use DateTime;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="dbo.extensionpoints")
+ * @ORM\HasLifecycleCallbacks
  */
 class ExtensionPointsAddedLog
 {
@@ -72,5 +74,13 @@ class ExtensionPointsAddedLog
     public function getAccount(): Account
     {
         return $this->account;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist(LifecycleEventArgs $args)
+    {
+        $this->setCreatedOn(new DateTime('now'));
     }
 }
