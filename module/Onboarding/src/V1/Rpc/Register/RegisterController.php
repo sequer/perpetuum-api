@@ -27,6 +27,7 @@ class RegisterController extends AbstractActionController
         $account->setEmail($email);
         $account->setPassword(sha1($password));
         $account->setHasEmailConfirmed(false);
+        $account->setLeadSource(['host' => Account::LEAD_SOURCE_API]);
         $this->perpetuumEntityManager->persist($account);
 
         $token = new EmailConfirmationToken();

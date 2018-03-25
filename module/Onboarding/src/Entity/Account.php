@@ -11,6 +11,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Account
 {
+    const LEAD_SOURCE_API = 'webapiregister';
+    const LEAD_SOURCE_GAME = 'opencreate';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -32,6 +35,11 @@ class Account
      * @ORM\Column(name="emailConfirmed", type="boolean")
      */
     protected $hasEmailConfirmed;
+
+    /**
+     * @ORM\Column(name="campaignid", type="json_array")
+     */
+    protected $leadSource;
 
     /**
      * @ORM\OneToMany(targetEntity="Character", mappedBy="account")
@@ -76,5 +84,15 @@ class Account
     public function getHasEmailConfirmed()
     {
         return $this->hasConfirmedEmail;
+    }
+
+    public function setLeadSource($leadSource)
+    {
+        $this->leadSource = $leadSource;
+    }
+
+    public function getLeadSource()
+    {
+        return $this->leadSource;
     }
 }
