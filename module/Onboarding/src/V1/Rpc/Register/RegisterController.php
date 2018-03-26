@@ -30,11 +30,6 @@ class RegisterController extends AbstractActionController
         $account->setLeadSource(['host' => Account::LEAD_SOURCE_API]);
         $this->perpetuumEntityManager->persist($account);
 
-        $extensionPointsAddedLog = new ExtensionPointsAddedLog();
-        $extensionPointsAddedLog->setAccount($account);
-        $extensionPointsAddedLog->setPoints(40000);
-        $this->perpetuumEntityManager->persist($extensionPointsAddedLog);
-
         $token = new EmailConfirmationToken();
         $token->setHash(bin2hex(openssl_random_pseudo_bytes(16)));
         $token->setEmail($email);
