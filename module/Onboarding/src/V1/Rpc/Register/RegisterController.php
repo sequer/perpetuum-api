@@ -74,7 +74,11 @@ class RegisterController extends AbstractActionController
                 continue;
             }
 
-            $token = $this->entityManager->getRepository(EmailConfirmationToken::class)->findOneBy(['email' => $email]);
+            $token = $this->entityManager
+                ->getRepository(EmailConfirmationToken::class)
+                ->findOneBy([
+                    'email' => $account->getEmail()
+                ]);
             if ($token) {
                 dump('Confirmation mail already sent.');
 
