@@ -69,7 +69,7 @@ class RegisterController extends AbstractActionController
             dump($account);
 
             if ($this->isValidEmail($account->getEmail()) === false) {
-                dump(sprintf('Invalid email address \'%s\'', $account->getEmail());
+                dump(sprintf('Invalid email address \'%s\'', $account->getEmail()));
 
                 continue;
             }
