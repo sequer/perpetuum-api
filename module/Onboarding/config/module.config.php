@@ -52,6 +52,22 @@ return [
             ],
         ],
     ],
+    'console' => [
+        'router' => [
+            'routes' => [
+                'find' => [
+                    'type' => 'simple',
+                    'options' => [
+                        'route' => 'find',
+                        'defaults' => [
+                            'controller' => 'Onboarding\\V1\\Rpc\\Register\\Controller',
+                            'action' => 'find',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
     'validators' => [
         'factories' => [
             \Onboarding\Validator\NoObjectExists::class => \Onboarding\Validator\NoObjectExistsFactory::class,

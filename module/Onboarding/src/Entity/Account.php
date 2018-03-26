@@ -4,6 +4,7 @@ namespace Onboarding\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use DateTime;
 
 /**
  * @ORM\Entity
@@ -22,12 +23,12 @@ class Account
     protected $id;
 
     /**
-     * @ORM\Column(name="email", type="string")
+     * @ORM\Column(name="email", type="string", nullable=true)
      */
     protected $email;
 
     /**
-     * @ORM\Column(name="password", type="string")
+     * @ORM\Column(name="password", type="string", nullable=true)
      */
     protected $password;
 
@@ -37,7 +38,12 @@ class Account
     protected $hasEmailConfirmed;
 
     /**
-     * @ORM\Column(name="campaignid", type="json_array")
+     * @ORM\Column(name="creation", type="datetime", nullable=true)
+     */
+    protected $createdOn;
+
+    /**
+     * @ORM\Column(name="campaignid", type="json_array", nullable=true)
      */
     protected $leadSource;
 
@@ -56,7 +62,7 @@ class Account
         return $this->id;
     }
 
-    public function setEmail($email)
+    public function setEmail($email = null)
     {
         $this->email = $email;
     }
@@ -66,7 +72,7 @@ class Account
         return $this->email;
     }
 
-    public function setPassword($password)
+    public function setPassword($password = null)
     {
         $this->password = $password;
     }
@@ -86,7 +92,17 @@ class Account
         return $this->hasConfirmedEmail;
     }
 
-    public function setLeadSource($leadSource)
+    public function setCreatedOn(DateTime $createdOn = null)
+    {
+        $this->createdOn = $createdOn;
+    }
+
+    public function getCreatedOn(): ?DateTime
+    {
+        return $this->createdOn;
+    }
+
+    public function setLeadSource($leadSource = null)
     {
         $this->leadSource = $leadSource;
     }
