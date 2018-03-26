@@ -66,12 +66,18 @@ class RegisterController extends AbstractActionController
         $accounts = $this->getUnconfirmedAccounts();
 
         foreach ($accounts as $account) {
+            dump($account);
+
             if ($this->isValidEmail($account->getEmail()) === false) {
+                dump(sprintf('Invalid email address \'%s\'', $account->getEmail());
+
                 continue;
             }
 
             $token = $this->entityManager->getRepository(EmailConfirmationToken::class)->findOneBy(['email' => $email]);
             if ($token) {
+                dump('Confirmation mail already sent.');
+
                 continue;
             }
 
