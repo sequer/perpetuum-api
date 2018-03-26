@@ -135,7 +135,7 @@ class RegisterController extends AbstractActionController
             ->orderBy('a.createdOn', 'DESC')
             ->setMaxResults($limit)
             ->getQuery();
-        $query->setParameter(1, true);
+        $query->setParameter(1, false);
 
         return $query->getResult();
     }
