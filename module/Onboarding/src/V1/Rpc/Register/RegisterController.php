@@ -130,7 +130,8 @@ class RegisterController extends AbstractActionController
             ->setMaxResults($limit)
             ->getQuery();
         $query->setParameter(1, true);
-        $accounts = $query->getResult();
+
+        return $query->getResult();
     }
 
     private function isValidEmail($email): bool
