@@ -18,7 +18,7 @@ class VerifyController extends AbstractActionController
     public function verifyAction()
     {
         $token = $this->entityManager->getRepository(EmailConfirmationToken::class)->findOneBy([
-        	'hash' => $this->routeParam('token'), 
+        	'hash' => $this->routeParam('token'),
         	'consumedOn' => null,
         ]);
 

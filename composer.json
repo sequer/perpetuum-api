@@ -1,5 +1,5 @@
 {
-    "name": "im-bart/perpetuum-api",
+    "name": "sequer/perpetuum-api",
     "description": "Perpetuum API",
     "type": "library",
     "license": "BSD-3-Clause",
@@ -8,7 +8,7 @@
         "apigility",
         "zf2"
     ],
-    "homepage": "https://github.com/im-bart/perpetuum-api",
+    "homepage": "https://github.com/sequer/perpetuum-api",
     "config": {
         "process-timeout": 5000
     },
