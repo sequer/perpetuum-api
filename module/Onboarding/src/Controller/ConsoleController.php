@@ -4,7 +4,8 @@ namespace Onboarding\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Onboarding\Entity\Account as PerpetuumAccount;
-use Application\Entity\{Account, Token};
+use Application\Entity\{Account, Email};
+use Application\Entity\Token\EmailConfirmation as EmailConfirmationToken;
 use Zend\InputFilter\{Input, InputFilter};
 use Zend\Validator;
 use DateTime;
@@ -117,7 +118,7 @@ class ConsoleController extends AbstractActionController
             try {
                 $response = $this->mailer->sendActivationMail($token);
                 $email->setSentOn(new DateTime('now'));
-            } catch (Exception $exception) {
+            } catch (\Exception $exception) {
                 // do nothing
             }
 
