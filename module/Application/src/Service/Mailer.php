@@ -22,7 +22,7 @@ class Mailer
                     'email' => 'no-reply@mail.openperpetuum.com',
                 ],
                 'subject' => 'Activate your Open Perpetuum account',
-                'html' => '<html><body><p>Hi there!</p><p>You have recently registered an account to Open Perpetuum at this email address.</p><p>Please <a href="http://register.openperpetuum.com/verify/{{token}}">click here</a> to verify your email address, or copy and paste the following link in your browser:</p><p>http://register.openperpetuum.com/verify/{{token}}</p><p>Welcome to Perpetuum, Agent!</p></body></html>',
+                'html' => '<html><body><p>Hi there!</p><p>You have recently registered an account to Open Perpetuum at this email address.</p><p>Please <a href="http://register.openperpetuum.com/verify/{{token}}">click here</a> to verify your email address, or copy and paste the following link in your browser:</p><p>http://register.openperpetuum.com/verify/{{token}}</p><p>Welcome to Perpetuum, Agent!</p><p><em>You received this email because you registered on the Open Perpetuum test server with a valid email address. We are currently testing the email validation system!</em></p></body></html>',
             ],
             'substitution_data' => [
                 'token' => $token->getHash(),
