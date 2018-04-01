@@ -8,7 +8,7 @@ use DateTime;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="`dbo.extensionpoints`")
+ * @ORM\Table(name="dbo.extensionpoints")
  * @ORM\HasLifecycleCallbacks
  */
 class ExtensionPointsAddedLog
