@@ -11,7 +11,7 @@ use DateTime;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *     "email_confirmation" = "Application\Entity\Token\EmailConfirmation", 
+ *     "email_confirmation" = "Application\Entity\Token\EmailConfirmation",
  *     "password_reset" = "Application\Entity\Token\PasswordReset"
  * })
  * @ORM\HasLifecycleCallbacks
@@ -32,6 +32,12 @@ abstract class Token extends Entity
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $consumedOn;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Account")
+     * @ORM\JoinColumn(name="accountId", referencedColumnName="id")
+     */
+    protected $account;
 
     public function setHash($hash)
     {
@@ -61,6 +67,16 @@ abstract class Token extends Entity
     public function getConsumedOn()
     {
         return $this->consumedOn;
+    }
+
+    public function setAccount($account)
+    {
+        $this->account = $account;
+    }
+
+    public function getAccount()
+    {
+        return $this->account;
     }
 
     /**

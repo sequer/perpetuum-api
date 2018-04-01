@@ -8,4 +8,7 @@ return [
     'zf-content-negotiation' => [
         'selectors' => [],
     ],
+    'sparkpost' => [
+        'sink' => false,
+    ],
 ];

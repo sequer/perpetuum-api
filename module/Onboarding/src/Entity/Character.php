@@ -7,12 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="dbo.characters")
+ * @ORM\Table(name="`dbo.characters`")
  */
 class Character
 {
     /**
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="characterID", type="integer")
      */
     protected $id;

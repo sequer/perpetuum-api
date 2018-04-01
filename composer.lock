@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "90ec0b7bfacc763088f0ce1e14510713",
+    "content-hash": "f087e9f9f409c66f4880a8ac36fb7694",
     "packages": [
         {
             "name": "api-skeletons/zf-doctrine-hydrator",
@@ -3874,16 +3874,16 @@
         },
         {
             "name": "zfcampus/zf-api-problem",
-            "version": "1.2.2",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zfcampus/zf-api-problem.git",
-                "reference": "783067e20328a82d35eb20a3fb876121da80c89d"
+                "reference": "8227f2116835db3835b9f362806a2a7336f72559"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zfcampus/zf-api-problem/zipball/783067e20328a82d35eb20a3fb876121da80c89d",
-                "reference": "783067e20328a82d35eb20a3fb876121da80c89d",
+                "url": "https://api.github.com/repos/zfcampus/zf-api-problem/zipball/8227f2116835db3835b9f362806a2a7336f72559",
+                "reference": "8227f2116835db3835b9f362806a2a7336f72559",
                 "shasum": ""
             },
             "require": {
@@ -3897,7 +3897,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8",
-                "squizlabs/php_codesniffer": "^2.7"
+                "zendframework/zend-coding-standard": "~1.0.0"
             },
             "type": "library",
             "extra": {
@@ -3927,7 +3927,7 @@
                 "zend",
                 "zf2"
             ],
-            "time": "2016-10-11T20:38:29+00:00"
+            "time": "2017-07-24T13:48:49+00:00"
         },
         {
             "name": "zfcampus/zf-apigility",
@@ -5573,7 +5573,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^5.6 || ^7.0"
+        "php": "^7.0"
     },
     "platform-dev": []
 }

@@ -3,14 +3,12 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use DateTime;
 
 /**
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
-class SentEmail extends Entity
+class Email extends Entity
 {
     const NAME_SITE_REGISTER_VERIFY = 'site-register-verify';
     const NAME_SERVER_REGISTER_VERIFY = 'server-register-verify';
@@ -26,7 +24,7 @@ class SentEmail extends Entity
     protected $name;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $sentOn;
 
@@ -74,13 +72,5 @@ class SentEmail extends Entity
     public function getToken(): ?Token
     {
         return $this->token;
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function prePersist(LifecycleEventArgs $args)
-    {
-        $this->setSentOn(new DateTime('now'));
     }
 }

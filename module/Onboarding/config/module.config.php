@@ -60,7 +60,7 @@ return [
                     'options' => [
                         'route' => 'find',
                         'defaults' => [
-                            'controller' => 'Onboarding\\V1\\Rpc\\Register\\Controller',
+                            'controller' => \Onboarding\Controller\ConsoleController::class,
                             'action' => 'find',
                         ],
                     ],
@@ -323,6 +323,16 @@ return [
                             ],
                         ],
                     ],
+                    2 => [
+                        'name' => \Onboarding\Validator\NoObjectExists::class,
+                        'options' => [
+                            'object_repository' => \Application\Entity\Account::class,
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'fields' => [
+                                0 => 'email',
+                            ],
+                        ],
+                    ],
                 ],
                 'filters' => [],
                 'name' => 'email',
@@ -350,6 +360,7 @@ return [
             'Onboarding\\V1\\Rpc\\Register\\Controller' => \Onboarding\V1\Rpc\Register\RegisterControllerFactory::class,
             'Onboarding\\V1\\Rpc\\Verify\\Controller' => \Onboarding\V1\Rpc\Verify\VerifyControllerFactory::class,
             'Onboarding\\V1\\Rpc\\Reset\\Controller' => \Onboarding\V1\Rpc\Reset\ResetControllerFactory::class,
+            \Onboarding\Controller\ConsoleController::class => \Onboarding\Controller\ConsoleControllerFactory::class,
         ],
     ],
     'zf-rpc' => [

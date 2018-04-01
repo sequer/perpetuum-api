@@ -8,7 +8,7 @@ use DateTime;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="dbo.accounts")
+ * @ORM\Table(name="`dbo.accounts`")
  */
 class Account
 {

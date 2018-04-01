@@ -9,6 +9,7 @@ use ZF\Apigility\Admin\Model\ModulePathSpec;
 return [
     'view_manager' => [
         'display_exceptions' => true,
+        'display_not_found_reason' => true,
     ],
     'zf-apigility-admin' => [
         'path_spec' => ModulePathSpec::PSR_4,
@@ -16,5 +17,8 @@ return [
     'zf-configuration' => [
         'enable_short_array' => true,
         'class_name_scalars' => true,
+    ],
+    'sparkpost' => [
+        'sink' => true,
     ],
 ];
