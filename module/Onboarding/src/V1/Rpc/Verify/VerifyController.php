@@ -43,12 +43,12 @@ class VerifyController extends AbstractActionController
             $perpetuumAccount = new PerpetuumAccount();
             $perpetuumAccount->setEmail($token->getAccount()->getEmail());
             $perpetuumAccount->setLeadSource(['host' => PerpetuumAccount::LEAD_SOURCE_API]);
-            $perpetuumAccount->setPassword($token->getAccount()->getPassword());
             $this->perpetuumEntityManager->persist($perpetuumAccount);
         }
 
         $token->setConsumedOn(new DateTime('now'));
         $token->getAccount()->setHasEmailConfirmed(true);
+        $perpetuumAccount->setPassword($token->getAccount()->getPassword());
         $perpetuumAccount->setHasEmailConfirmed(true);
 
         $this->entityManager->flush();

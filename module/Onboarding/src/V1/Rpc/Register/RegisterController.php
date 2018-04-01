@@ -4,8 +4,6 @@ namespace Onboarding\V1\Rpc\Register;
 use Zend\Mvc\Controller\AbstractActionController;
 use Application\Entity\{Account, Email};
 use Application\Entity\Token\EmailConfirmation as EmailConfirmationToken;
-use Zend\InputFilter\{Input, InputFilter};
-use Zend\Validator;
 use Exception;
 use DateTime;
 

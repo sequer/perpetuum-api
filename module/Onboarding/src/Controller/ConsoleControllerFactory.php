@@ -10,7 +10,7 @@ class ConsoleControllerFactory
         return new ConsoleController(
             $container->get('doctrine.entitymanager.orm_default'),
             $container->get('doctrine.entitymanager.orm_sqlsrv'),
-            $container->get(Mailer::class);
+            $container->get(Mailer::class)
         );
     }
 }
