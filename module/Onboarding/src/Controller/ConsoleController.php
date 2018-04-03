@@ -4,6 +4,7 @@ namespace Onboarding\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Onboarding\Entity\Account as PerpetuumAccount;
+use Onboarding\Entity\Kill as PerpetuumKill;
 use Application\Entity\{Account, Email};
 use Application\Entity\Token\EmailConfirmation as EmailConfirmationToken;
 use Zend\InputFilter\{Input, InputFilter};
@@ -130,6 +131,25 @@ class ConsoleController extends AbstractActionController
         }
     }
 
+    public function killAction()
+    {
+        $query = $this->perpetuumEntityManager->createQueryBuilder()
+            ->select('k')
+            ->from(PerpetuumKill::class, 'k')
+            ->andWhere('k.createdOn > ?1')
+            ->orderBy('k.createdOn', 'DESC')
+            ->getQuery();
+
+        $query->setParameter(1, new DateTime('-1 week'));
+
+        $result = $query->iterate();
+        foreach ($result as $row) {
+            $kill = $row[0];
+
+            dump($kill);
+        }
+
+    }
 
     private function getUnconfirmedAccounts()
     {

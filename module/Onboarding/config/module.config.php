@@ -65,6 +65,16 @@ return [
                         ],
                     ],
                 ],
+                'kill' => [
+                    'type' => 'simple',
+                    'options' => [
+                        'route' => 'kill',
+                        'defaults' => [
+                            'controller' => \Onboarding\Controller\ConsoleController::class,
+                            'action' => 'kill',
+                        ],
+                    ],
+                ],
             ],
         ],
     ],

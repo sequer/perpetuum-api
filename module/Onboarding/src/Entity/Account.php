@@ -8,7 +8,7 @@ use DateTime;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="dbo.accounts")
+ * @ORM\Table(name="accounts", schema="dbo")
  */
 class Account
 {
@@ -55,6 +55,11 @@ class Account
     public function __construct()
     {
         $this->characters = new ArrayCollection();
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     public function getId()
