@@ -1,4 +1,3 @@
-
 <?php
 
 namespace Onboarding\Entity;
@@ -8,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="killreports", schema="dbo")
+ * @ORM\Table(name="`dbo.killreports`")
  */
 class Kill
 {

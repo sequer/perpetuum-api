@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
  * @ORM\Table(name="characters", schema="dbo")
+ * @ORM\Table(name="`dbo.characters`")
  */
 class Character
 {

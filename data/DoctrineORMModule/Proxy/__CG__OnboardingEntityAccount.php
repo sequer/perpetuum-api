@@ -64,10 +64,10 @@ class Account extends \Onboarding\Entity\Account implements \Doctrine\ORM\Proxy\
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'email', 'characters'];
+            return ['__isInitialized__', 'id', 'email', 'password', 'hasEmailConfirmed', 'createdOn', 'leadSource', 'characters'];
         }
 
-        return ['__isInitialized__', 'id', 'email', 'characters'];
+        return ['__isInitialized__', 'id', 'email', 'password', 'hasEmailConfirmed', 'createdOn', 'leadSource', 'characters'];
     }
 
     /**
@@ -173,4 +173,140 @@ class Account extends \Onboarding\Entity\Account implements \Doctrine\ORM\Proxy\
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
+    public function setId($id)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setId', [$id]);
+
+        return parent::setId($id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getId()
+    {
+        if ($this->__isInitialized__ === false) {
+            return (int)  parent::getId();
+        }
+
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getId', []);
+
+        return parent::getId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setEmail($email = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setEmail', [$email]);
+
+        return parent::setEmail($email);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getEmail()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEmail', []);
+
+        return parent::getEmail();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPassword($password = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPassword', [$password]);
+
+        return parent::setPassword($password);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPassword()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPassword', []);
+
+        return parent::getPassword();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setHasEmailConfirmed($hasEmailConfirmed)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setHasEmailConfirmed', [$hasEmailConfirmed]);
+
+        return parent::setHasEmailConfirmed($hasEmailConfirmed);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getHasEmailConfirmed()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getHasEmailConfirmed', []);
+
+        return parent::getHasEmailConfirmed();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCreatedOn(\DateTime $createdOn = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCreatedOn', [$createdOn]);
+
+        return parent::setCreatedOn($createdOn);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCreatedOn(): ?\DateTime
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCreatedOn', []);
+
+        return parent::getCreatedOn();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setLeadSource($leadSource = NULL)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLeadSource', [$leadSource]);
+
+        return parent::setLeadSource($leadSource);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLeadSource()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLeadSource', []);
+
+        return parent::getLeadSource();
+    }
+
 }

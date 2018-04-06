@@ -3,7 +3,12 @@
 namespace Onboarding\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Onboarding\Entity\Account as PerpetuumAccount;
+use Onboarding\Entity\{
+    Account as PerpetuumAccount,
+    Character as PerpetuumCharacter,
+    Item as PerpetuumItem,
+    Zone as PerpetuumZone
+};
 use Onboarding\Entity\Kill as PerpetuumKill;
 use Application\Entity\{Account, Email};
 use Application\Entity\Token\EmailConfirmation as EmailConfirmationToken;
@@ -146,9 +151,95 @@ class ConsoleController extends AbstractActionController
         foreach ($result as $row) {
             $kill = $row[0];
 
-            dump($kill);
+            $data = $this->unpackGenxy($kill->getData());
+            $enrichedData = $this->enrichKillData($data);
+
+            dump($kill->getData(), $data, $enrichedData);
+        }
+    }
+
+    private function enrichKillData(array $data)
+    {
+        if (isset($data['zoneID'])) {
+            $data['zone'] = $this->perpetuumEntityManager->find(PerpetuumZone::class, $data['zoneID']);
+        }
+        if (isset($data['victim']['robot'])) {
+            $data['victim']['robot'] = $this->perpetuumEntityManager->find(PerpetuumItem::class, $data['victim']['robot']);
+        }
+        if (isset($data['victim']['characterID'])) {
+            $data['victim']['character'] = $this->perpetuumEntityManager->find(PerpetuumCharacter::class, $data['victim']['characterID']);
         }
 
+        foreach ($data['attackers'] as $key => $attacker) {
+            $data['attackers'][$key]['robot'] = $this->perpetuumEntityManager->find(PerpetuumItem::class, $attacker['robot']);
+            $data['attackers'][$key]['character'] = $this->perpetuumEntityManager->find(PerpetuumCharacter::class, $attacker['characterID']);
+        }
+
+        return $data;
+    }
+
+    private function unpackGenxy($data)
+    {
+        $result = [];
+
+        if (!is_array($data) && preg_match('/^\|a(\d+)=\[/', $data, $match)) {
+            $data = preg_split('/\|a\d+/', $data);
+            unset($data[0]); // always empty
+            foreach ($data as $key => $value) {
+                $data[$key] = $match[$key].$value;
+            }
+            dump($data);
+        }
+
+        if (!is_array($data) && strpos($data, '#') === 0) {
+            $data = explode('#', $data);
+            if (count($data) === 1) {
+                return $data;
+            }
+        }
+        if (!is_array($data) && strpos($data, '|') === 0) {
+            $data = explode('|', $data);
+            if (count($data) === 1) {
+                return $data;
+            }
+        }
+
+        foreach ($data as $key => $value) {
+            if ($value === "") {
+                continue;
+            }
+            if (strstr($value, '=i')) {
+                $pair = explode('=i', $value);
+                if (count($pair) === 2) {
+                    $result[$pair[0]] = (int) $pair[1];
+                    continue;
+                }
+            }
+            if (strstr($value, '=$')) {
+                $pair = explode('=$', $value);
+                if (count($pair) === 2) {
+                    $result[$pair[0]] = (string) $pair[1];
+                    continue;
+                }
+            }
+            if (strstr($value, '=t')) {
+                $pair = explode('=t', $value);
+                if (count($pair) === 2) {
+                    $_value = $pair[1];
+                    $_value = unpack('f', hex2bin($_value));
+                    $_value = reset($_value);
+                    $result[$pair[0]] = $_value;
+                    continue;
+                }
+            }
+            if (preg_match('/=\[(.+)\]/', $value, $match)) {
+                $pair = explode('=[', $value);
+                $result[$pair[0]] = $this->unpackGenxy($match[1]);
+                continue;
+            }
+        }
+
+        return $result;
     }
 
     private function getUnconfirmedAccounts()
