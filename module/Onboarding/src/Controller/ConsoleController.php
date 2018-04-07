@@ -7,9 +7,10 @@ use Onboarding\Entity\{
     Account as PerpetuumAccount,
     Character as PerpetuumCharacter,
     Item as PerpetuumItem,
-    Zone as PerpetuumZone
+    Zone as PerpetuumZone,
+    Kill as PerpetuumKill
 };
-use Onboarding\Entity\Kill as PerpetuumKill;
+use Killboard\Entity as Killboard;
 use Application\Entity\{Account, Email};
 use Application\Entity\Token\EmailConfirmation as EmailConfirmationToken;
 use Zend\InputFilter\{Input, InputFilter};
@@ -138,108 +139,153 @@ class ConsoleController extends AbstractActionController
 
     public function killAction()
     {
+        // $dictionaryData = file_get_contents(__DIR__.'/../../../../data/gbf/dictionary.txt');
+        // $dictionary = $this->unpackGenxy($dictionaryData);
+        // dump($dictionary);
+        // exit;
+
         $query = $this->perpetuumEntityManager->createQueryBuilder()
             ->select('k')
             ->from(PerpetuumKill::class, 'k')
-            ->andWhere('k.createdOn > ?1')
-            ->orderBy('k.createdOn', 'DESC')
+            ->andWhere('k.occuredOn > ?1')
+            ->orderBy('k.occuredOn', 'DESC')
             ->getQuery();
-
-        $query->setParameter(1, new DateTime('-1 week'));
-
+        $query->setParameter(1, new DateTime('-100 week'));
         $result = $query->iterate();
+
+
         foreach ($result as $row) {
-            $kill = $row[0];
+            $perpetuumKill = $row[0];
 
-            $data = $this->unpackGenxy($kill->getData());
-            $enrichedData = $this->enrichKillData($data);
+            $kill = $this->entityManager->getRepository(Killboard\Kill::class)->findOneBy([
+                'uid' => $perpetuumKill->getUid(),
+            ]);
+            if ($kill) {
+                // continue;
+            }
 
-            dump($kill->getData(), $data, $enrichedData);
+            $data = $this->unpackGenxy($perpetuumKill->getData());
+            $enrichedData = $this->enrichKillFromPerpetuum($data);
+
+            $kill = new Killboard\Kill();
+            $kill->setUid($perpetuumKill->getUid());
+            $kill->setDate($perpetuumKill->getOccuredOn());
+            $this->entityManager->persist($kill);
+
+            $agent = $this->upsertEntity(Killboard\Agent::class, $enrichedData['victim']['characterID']);
+            $agent->setName($enrichedData['victim']['nick']);
+            $kill->setAgent($agent);
+
+            $corporation = $this->upsertEntity(Killboard\Corporation::class, $enrichedData['victim']['corporation']);
+            $kill->setCorporation($corporation);
+            $agent->setCorporation($corporation);
+
+            $robot = $this->upsertEntity(Killboard\Robot::class, $enrichedData['victim']['robot']);
+            $kill->setRobot($robot);
+
+            $zone = $this->upsertEntity(Killboard\Zone::class, $enrichedData['zone']);
+            $kill->setZone($zone);
+
+            $this->entityManager->flush();
+
+            foreach ($enrichedData['attackers'] as $attackerData) {
+                $attacker = new Killboard\Attacker();
+                $attacker->setKill($kill);
+                $attacker->setDamageDealt($attackerData['damageDone']);
+                $this->entityManager->persist($attacker);
+
+                $agent = $this->upsertEntity(Killboard\Agent::class, $attackerData['characterID']);
+                $agent->setName($attackerData['nick']);
+                $attacker->setAgent($agent);
+
+                $corporation = $this->upsertEntity(Killboard\Corporation::class, $attackerData['corporation']);
+                $agent->setCorporation($corporation);
+                $attacker->setCorporation($corporation);
+
+                $robot = $this->upsertEntity(Killboard\Robot::class, $attackerData['robot']);
+                $attacker->setRobot($robot);
+
+                $kill->setDamageReceived(bcadd($kill->getDamageReceived(), $attackerData['damageDone'], 4));
+
+                $this->entityManager->flush();
+            }
+
+
+
+
+
+
+            dump($enrichedData);
+            dump($kill);
+
+
+            // dump($kill->getData());
+            // dump($data);
+            // dump($enrichedData);
+
+            $this->entityManager->clear();
         }
     }
 
-    private function enrichKillData(array $data)
+    private function upsertEntity($className, $identifier) // move to factory
     {
-        if (isset($data['zoneID'])) {
-            $data['zone'] = $this->perpetuumEntityManager->find(PerpetuumZone::class, $data['zoneID']);
-        }
-        if (isset($data['victim']['robot'])) {
-            $data['victim']['robot'] = $this->perpetuumEntityManager->find(PerpetuumItem::class, $data['victim']['robot']);
-        }
-        if (isset($data['victim']['characterID'])) {
-            $data['victim']['character'] = $this->perpetuumEntityManager->find(PerpetuumCharacter::class, $data['victim']['characterID']);
+        if ($className === Killboard\Agent::class) {
+            $result = $this->entityManager->getRepository($className)->findOneBy([
+                'uid' => $identifier,
+            ]);
+
+            if (!$result) {
+                $result = new $className();
+                $result->setUid($identifier);
+                $this->entityManager->persist($result);
+            }
+
+            return $result;
         }
 
-        foreach ($data['attackers'] as $key => $attacker) {
-            $data['attackers'][$key]['robot'] = $this->perpetuumEntityManager->find(PerpetuumItem::class, $attacker['robot']);
-            $data['attackers'][$key]['character'] = $this->perpetuumEntityManager->find(PerpetuumCharacter::class, $attacker['characterID']);
+        if ($className === Killboard\Corporation::class) {
+            $result = $this->entityManager->getRepository($className)->findOneBy([
+                'name' => $identifier,
+            ]);
+
+            if (!$result) {
+                $result = new $className();
+                $result->setName($identifier);
+                $this->entityManager->persist($result);
+            }
+
+            return $result;
         }
 
-        return $data;
-    }
+        if ($className === Killboard\Zone::class) {
+            $result = $this->entityManager->getRepository($className)->findOneBy([
+                'definition' => $identifier->getName(),
+            ]);
 
-    private function unpackGenxy($data)
-    {
-        $result = [];
-
-        if (!is_array($data) && preg_match('/^\|a(\d+)=\[/', $data, $match)) {
-            $data = preg_split('/\|a\d+/', $data);
-            unset($data[0]); // always empty
-            foreach ($data as $key => $value) {
-                $data[$key] = $match[$key].$value;
+            if (!$result) {
+                $result = new $className();
+                $result->setDefinition($identifier->getName());
+                $this->entityManager->persist($result);
             }
-            dump($data);
+
+            return $result;
         }
 
-        if (!is_array($data) && strpos($data, '#') === 0) {
-            $data = explode('#', $data);
-            if (count($data) === 1) {
-                return $data;
+        if ($className === Killboard\Robot::class) {
+            $result = $this->entityManager->getRepository($className)->findOneBy([
+                'definition' => $identifier->getName(),
+            ]);
+
+            if (!$result) {
+                $result = new $className();
+                $result->setDefinition($identifier->getName());
+                $this->entityManager->persist($result);
             }
-        }
-        if (!is_array($data) && strpos($data, '|') === 0) {
-            $data = explode('|', $data);
-            if (count($data) === 1) {
-                return $data;
-            }
+
+            return $result;
         }
 
-        foreach ($data as $key => $value) {
-            if ($value === "") {
-                continue;
-            }
-            if (strstr($value, '=i')) {
-                $pair = explode('=i', $value);
-                if (count($pair) === 2) {
-                    $result[$pair[0]] = (int) $pair[1];
-                    continue;
-                }
-            }
-            if (strstr($value, '=$')) {
-                $pair = explode('=$', $value);
-                if (count($pair) === 2) {
-                    $result[$pair[0]] = (string) $pair[1];
-                    continue;
-                }
-            }
-            if (strstr($value, '=t')) {
-                $pair = explode('=t', $value);
-                if (count($pair) === 2) {
-                    $_value = $pair[1];
-                    $_value = unpack('f', hex2bin($_value));
-                    $_value = reset($_value);
-                    $result[$pair[0]] = $_value;
-                    continue;
-                }
-            }
-            if (preg_match('/=\[(.+)\]/', $value, $match)) {
-                $pair = explode('=[', $value);
-                $result[$pair[0]] = $this->unpackGenxy($match[1]);
-                continue;
-            }
-        }
-
-        return $result;
+        return false;
     }
 
     private function getUnconfirmedAccounts()
@@ -271,5 +317,95 @@ class ConsoleController extends AbstractActionController
         $inputFilter->setData(['email' => $email]);
 
         return $inputFilter->isValid();
+    }
+
+    private function unpackGenxy($data)
+    {
+        $result = [];
+
+        if (is_string($data)) {
+            $data = trim($data);
+        }
+
+        if (!is_array($data) && preg_match('/^\|a\d+=\[/s', $data, $match)) {
+            $data = preg_split('/\|a\d+/', $data);
+        }
+
+        if (!is_array($data) && strpos($data, '#') === 0) {
+            $data = explode('#', substr($data, 1));
+            if (count($data) === 1) {
+                // return $data;
+            }
+        }
+        if (!is_array($data) && strpos($data, '|') === 0) {
+            $data = explode('|', substr($data, 1));
+            if (count($data) === 1) {
+                return $data;
+            }
+        }
+
+        foreach ($data as $key => $value) {
+            if ($value === "") {
+                continue;
+            }
+            if (strstr($value, '=i')) {
+                $pair = explode('=i', $value);
+                if (count($pair) === 2) {
+                    $_value = $pair[1];
+                    $_value = base_convert($_value, 16, 10);
+                    $result[$pair[0]] = (int) $_value;
+                    continue;
+                }
+            }
+            if (strstr($value, '=$')) {
+                $pair = explode('=$', $value);
+                if (count($pair) === 2) {
+                    $result[$pair[0]] = (string) trim($pair[1]);
+                    continue;
+                }
+            }
+            if (strstr($value, '=t')) {
+                $pair = explode('=t', $value);
+                if (count($pair) === 2) {
+                    $_value = $pair[1];
+                    $_value = unpack('f', hex2bin($_value));
+                    $_value = reset($_value);
+                    $result[$pair[0]] = $_value;
+                    continue;
+                }
+            }
+            if (preg_match('/=\[(.+)\]/s', $value, $match)) {
+                $pair = explode('=[', $value);
+                if ($pair[0]) {
+                    $result[$pair[0]] = $this->unpackGenxy($match[1]);
+                    continue;
+                }
+
+                $result[] = $this->unpackGenxy($match[1]);
+                continue;
+            }
+        }
+
+        return $result;
+    }
+
+    private function enrichKillFromPerpetuum(array $data)
+    {
+        if (isset($data['zoneID'])) {
+            $data['zone'] = $this->perpetuumEntityManager->find(PerpetuumZone::class, $data['zoneID']);
+        }
+        if (isset($data['victim']['robot'])) {
+            $data['victim']['robot'] = $this->perpetuumEntityManager->find(PerpetuumItem::class, $data['victim']['robot']);
+        }
+        if (isset($data['victim']['characterID'])) {
+            $data['victim']['character'] = $this->perpetuumEntityManager->find(PerpetuumCharacter::class, $data['victim']['characterID']);
+        }
+
+        foreach ($data['attackers'] as $key => $attacker) {
+            $data['attackers'][$key]['robot'] = $this->perpetuumEntityManager->find(PerpetuumItem::class, $attacker['robot']);
+            $data['attackers'][$key]['character'] = $this->perpetuumEntityManager->find(PerpetuumCharacter::class, $attacker['characterID']);
+        }
+
+        return $data;
     }
 }

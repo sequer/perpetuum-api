@@ -20,7 +20,7 @@ class Kill
     /**
      * @ORM\Column(name="date", type="datetime")
      */
-    protected $createdOn;
+    protected $occuredOn;
 
     /**
      * @ORM\Column(name="data", type="string")
@@ -37,14 +37,14 @@ class Kill
         return $this->uid;
     }
 
-    public function setCreatedOn($createdOn)
+    public function setOccuredOn($occuredOn)
     {
-        $this->createdOn = $createdOn;
+        $this->occuredOn = $occuredOn;
     }
 
-    public function getCreatedOn()
+    public function getOccuredOn()
     {
-        return $this->createdOn;
+        return $this->occuredOn;
     }
 
     public function setData($data)

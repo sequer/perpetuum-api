@@ -32,7 +32,8 @@ return [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'cache' => 'array',
                 'paths' => [
-                    __DIR__.'/../../module/Application/src/Entity'
+                    __DIR__.'/../../module/Application/src/Entity',
+                    __DIR__.'/../../module/Killboard/src/Entity',
                 ],
             ],
             'orm_sqlsrv_driver' => [
@@ -45,7 +46,8 @@ return [
             'orm_default' => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\DriverChain',
                 'drivers' => [
-                    'Application\Entity' => 'orm_default_driver'
+                    'Application\Entity' => 'orm_default_driver',
+                    'Killboard\Entity' => 'orm_default_driver'
                 ]
             ],
             'orm_sqlsrv' => [
