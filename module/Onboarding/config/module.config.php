@@ -65,6 +65,16 @@ return [
                         ],
                     ],
                 ],
+                'find' => [
+                    'type' => 'simple',
+                    'options' => [
+                        'route' => 'sync',
+                        'defaults' => [
+                            'controller' => \Onboarding\Controller\ConsoleController::class,
+                            'action' => 'sync',
+                        ],
+                    ],
+                ],
                 'kill' => [
                     'type' => 'simple',
                     'options' => [

@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="entitydefaults", schema="dbo")
- * @ORM\Table(name="`dbo.entitydefaults`")
  */
 class Item
 {

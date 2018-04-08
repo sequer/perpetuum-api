@@ -11,7 +11,7 @@ use Onboarding\Entity\{
     Kill as PerpetuumKill
 };
 use Killboard\Entity as Killboard;
-use Application\Entity\{Account, Email};
+use Application\Entity\{Account, Email, Token};
 use Application\Entity\Token\EmailConfirmation as EmailConfirmationToken;
 use Zend\InputFilter\{Input, InputFilter};
 use Zend\Validator;
@@ -137,6 +137,48 @@ class ConsoleController extends AbstractActionController
         }
     }
 
+    public function syncAction()
+    {
+        dump('Getting confirmed API accounts (e.g. consumed tokens).');
+
+        $verifyController = new \Onboarding\V1\Rpc\Verify\VerifyController(
+            $this->entityManager,
+            $this->perpetuumEntityManager
+        );
+
+        $query = $this->entityManager->createQueryBuilder()
+            ->select('t')
+            ->from(EmailConfirmationToken::class, 't')
+            ->andWhere('t.consumedOn IS NOT NULL')
+            ->getQuery();
+
+        $result = $query->iterate();
+
+        foreach ($result as $row) {
+            $token = $row[0];
+
+            if (
+                !$token->getAccount()
+                || !$token->getAccount()->hasEmailConfirmed()
+            ) {
+                $this->entityManager->clear();
+
+                continue;
+            }
+
+            dump('Adding Perpetuum account for confirmed account <'.$token->getAccount()->getEmail().'>.');
+
+            $perpetuumAccount = $verifyController->getUpsertedPerpetuumAccount($token->getAccount());
+            $perpetuumAccount->setPassword($token->getAccount()->getPassword());
+            $perpetuumAccount->setHasEmailConfirmed(true);
+            $perpetuumAccount->setLeadSource(['host' => PerpetuumAccount::LEAD_SOURCE_SYNC]);
+
+            $this->perpetuumEntityManager->flush();
+            $this->perpetuumEntityManager->clear();
+            $this->entityManager->clear();
+        }
+    }
+
     public function killAction()
     {
         // $dictionaryData = file_get_contents(__DIR__.'/../../../../data/gbf/dictionary.txt');
@@ -210,14 +252,8 @@ class ConsoleController extends AbstractActionController
                 $this->entityManager->flush();
             }
 
-
-
-
-
-
             dump($enrichedData);
             dump($kill);
-
 
             // dump($kill->getData());
             // dump($data);

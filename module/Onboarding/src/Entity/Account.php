@@ -14,6 +14,7 @@ class Account
 {
     const LEAD_SOURCE_API = 'webapiregister';
     const LEAD_SOURCE_GAME = 'opencreate';
+    const LEAD_SOURCE_SYNC = 'webapisync';
 
     /**
      * @ORM\Id

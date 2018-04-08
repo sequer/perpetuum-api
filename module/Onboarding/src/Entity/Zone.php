@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="zones", schema="dbo")
- * @ORM\Table(name="`dbo.zones`")
  */
 class Zone
 {

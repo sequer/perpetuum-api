@@ -33,18 +33,7 @@ class VerifyController extends AbstractActionController
             return new ApiProblemResponse(new ApiProblem(404, 'Token expired.'));
         }
 
-        $perpetuumAccount = $this->perpetuumEntityManager
-            ->getRepository(PerpetuumAccount::class)
-            ->findOneBy([
-                'email' => $token->getAccount()->getEmail()
-            ]);
-
-        if (!$perpetuumAccount) {
-            $perpetuumAccount = new PerpetuumAccount();
-            $perpetuumAccount->setEmail($token->getAccount()->getEmail());
-            $perpetuumAccount->setLeadSource(['host' => PerpetuumAccount::LEAD_SOURCE_API]);
-            $this->perpetuumEntityManager->persist($perpetuumAccount);
-        }
+        $perpetuumAccount = $this->getUpsertedPerpetuumAccount($token->getAccount());
 
         $token->setConsumedOn(new DateTime('now'));
         $token->getAccount()->setHasEmailConfirmed(true);
@@ -55,5 +44,21 @@ class VerifyController extends AbstractActionController
         $this->perpetuumEntityManager->flush();
 
     	return $this->getResponse()->setStatusCode(204);
+    }
+
+    public function getUpsertedPerpetuumAccount(Account $account)
+    {
+        $perpetuumAccount = $this->perpetuumEntityManager
+            ->getRepository(PerpetuumAccount::class)
+            ->findOneBy(['email' => $account->getEmail()]);
+
+        if (!$perpetuumAccount) {
+            $perpetuumAccount = new PerpetuumAccount();
+            $perpetuumAccount->setEmail($account->getEmail());
+            $perpetuumAccount->setLeadSource(['host' => PerpetuumAccount::LEAD_SOURCE_API]);
+            $this->perpetuumEntityManager->persist($perpetuumAccount);
+        }
+
+        return $perpetuumAccount;
     }
 }
