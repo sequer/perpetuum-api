@@ -207,7 +207,7 @@ return [
         'Killboard\\V1\\Rest\\Kill\\KillHydrator' => [
             'entity_class' => \Killboard\Entity\Kill::class,
             'object_manager' => 'doctrine.entitymanager.orm_default',
-            'by_value' => false,
+            'by_value' => true,
             'strategies' => [
                 'attackers' => \ZF\Doctrine\Hydrator\Strategy\CollectionExtract::class,
             ],
@@ -216,9 +216,9 @@ return [
         'Killboard\\V1\\Rest\\Attacker\\AttackerHydrator' => [
             'entity_class' => \Killboard\Entity\Attacker::class,
             'object_manager' => 'doctrine.entitymanager.orm_default',
-            'by_value' => false,
+            'by_value' => true,
             'filters' => [
-                0 => [
+                [
                     'filter' => 'attacker_entity_filter',
                 ],
             ],
