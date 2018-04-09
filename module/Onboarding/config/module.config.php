@@ -65,7 +65,7 @@ return [
                         ],
                     ],
                 ],
-                'find' => [
+                'sync' => [
                     'type' => 'simple',
                     'options' => [
                         'route' => 'sync',
