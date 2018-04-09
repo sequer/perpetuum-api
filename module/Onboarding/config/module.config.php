@@ -341,6 +341,7 @@ return [
                             'fields' => [
                                 0 => 'email',
                             ],
+                            'message' => 'That email address is already registered.',
                         ],
                     ],
                     2 => [
@@ -351,6 +352,7 @@ return [
                             'fields' => [
                                 0 => 'email',
                             ],
+                            'message' => 'That email address is already registered.',
                         ],
                     ],
                 ],
