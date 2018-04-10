@@ -12,6 +12,7 @@ use DateTime;
  */
 class Account
 {
+    const LEVEL_NORMAL = 2;
     const LEAD_SOURCE_API = 'webapiregister';
     const LEAD_SOURCE_GAME = 'opencreate';
     const LEAD_SOURCE_SYNC = 'webapisync';
@@ -32,6 +33,11 @@ class Account
      * @ORM\Column(name="password", type="string", nullable=true)
      */
     protected $password;
+
+    /**
+     * @ORM\Column(name="accLevel", type="integer")
+     */
+    protected $level = self::LEVEL_NORMAL;
 
     /**
      * @ORM\Column(name="emailConfirmed", type="boolean")
@@ -86,6 +92,16 @@ class Account
     public function getPassword()
     {
         return $this->password;
+    }
+
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
+    public function getLevel()
+    {
+        return $this->level;
     }
 
     public function setHasEmailConfirmed($hasEmailConfirmed)
