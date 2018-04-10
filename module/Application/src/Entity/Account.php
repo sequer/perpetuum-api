@@ -14,6 +14,7 @@ class Account extends Entity
 {
     /**
      * @ORM\Column(type="string")
+     * @var string
      */
     protected $email;
 
@@ -21,11 +22,13 @@ class Account extends Entity
      * Store SHA1 hashes, because the Perpetuum server does too.
      *
      * @ORM\Column(type="string")
+     * @var string
      */
     protected $password;
 
     /**
      * @ORM\Column(type="datetime")
+     * @var DateTime
      */
     protected $createdOn;
 

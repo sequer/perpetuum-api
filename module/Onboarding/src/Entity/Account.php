@@ -4,11 +4,13 @@ namespace Onboarding\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use DateTime;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="accounts", schema="dbo")
+ * @ORM\HasLifecycleCallbacks
  */
 class Account
 {
@@ -132,5 +134,13 @@ class Account
     public function getLeadSource()
     {
         return $this->leadSource;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist(LifecycleEventArgs $args)
+    {
+        $this->setCreatedOn(new DateTime('now'));
     }
 }
