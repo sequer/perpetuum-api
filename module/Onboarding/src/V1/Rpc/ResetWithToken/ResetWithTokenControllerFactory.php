@@ -1,11 +1,11 @@
 <?php
-namespace Onboarding\V1\Rpc\Verify;
+namespace Onboarding\V1\Rpc\ResetWithToken;
 
-class VerifyControllerFactory
+class ResetWithTokenControllerFactory
 {
     public function __invoke($container)
     {
-        return new VerifyController(
+        return new ResetWithTokenController(
             $container->get('doctrine.entitymanager.orm_default'),
             $container->get('doctrine.entitymanager.orm_sqlsrv')
         );

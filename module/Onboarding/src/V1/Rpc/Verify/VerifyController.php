@@ -10,6 +10,9 @@ use DateTime;
 
 class VerifyController extends AbstractActionController
 {
+    private $entityManager;
+    private $perpetuumEntityManager;
+
 	public function __construct($entityManager, $perpetuumEntityManager)
     {
         $this->entityManager = $entityManager;

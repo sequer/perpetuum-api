@@ -2,24 +2,6 @@
 return [
     'router' => [
         'routes' => [
-            'onboarding.rest.doctrine.account' => [
-                'type' => 'Segment',
-                'options' => [
-                    'route' => '/onboarding/account[/:account_id]',
-                    'defaults' => [
-                        'controller' => 'Onboarding\\V1\\Rest\\Account\\Controller',
-                    ],
-                ],
-            ],
-            'onboarding.rest.doctrine.character' => [
-                'type' => 'Segment',
-                'options' => [
-                    'route' => '/onboarding/character[/:character_id]',
-                    'defaults' => [
-                        'controller' => 'Onboarding\\V1\\Rest\\Character\\Controller',
-                    ],
-                ],
-            ],
             'onboarding.rpc.register' => [
                 'type' => 'Segment',
                 'options' => [
@@ -43,10 +25,30 @@ return [
             'onboarding.rpc.reset' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route' => '/onboarding/reset[/:token]',
+                    'route' => '/onboarding/reset',
                     'defaults' => [
                         'controller' => 'Onboarding\\V1\\Rpc\\Reset\\Controller',
                         'action' => 'reset',
+                    ],
+                ],
+            ],
+            'onboarding.rpc.resend' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/onboarding/resend',
+                    'defaults' => [
+                        'controller' => 'Onboarding\\V1\\Rpc\\Resend\\Controller',
+                        'action' => 'resend',
+                    ],
+                ],
+            ],
+            'onboarding.rpc.reset-with-token' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/onboarding/reset/:token',
+                    'defaults' => [
+                        'controller' => 'Onboarding\\V1\\Rpc\\ResetWithToken\\Controller',
+                        'action' => 'resetWithToken',
                     ],
                 ],
             ],
@@ -91,76 +93,29 @@ return [
     'validators' => [
         'factories' => [
             \Onboarding\Validator\NoObjectExists::class => \Onboarding\Validator\NoObjectExistsFactory::class,
+            \Onboarding\Validator\ObjectExists::class => \Onboarding\Validator\ObjectExistsFactory::class,
         ],
     ],
     'zf-versioning' => [
         'uri' => [
-            0 => 'onboarding.rest.doctrine.account',
-            1 => 'onboarding.rest.doctrine.character',
             2 => 'onboarding.rpc.register',
             3 => 'onboarding.rpc.verify',
             4 => 'onboarding.rpc.reset',
+            5 => 'onboarding.rpc.resend',
+            6 => 'onboarding.rpc.reset-with-token',
         ],
     ],
     'zf-rest' => [
-        'Onboarding\\V1\\Rest\\Account\\Controller' => [
-            'listener' => \Onboarding\V1\Rest\Account\AccountResource::class,
-            'route_name' => 'onboarding.rest.doctrine.account',
-            'route_identifier_name' => 'account_id',
-            'entity_identifier_name' => 'id',
-            'collection_name' => 'account',
-            'entity_http_methods' => [
-                0 => 'GET',
-            ],
-            'collection_http_methods' => [
-                0 => 'GET',
-            ],
-            'collection_query_whitelist' => [],
-            'page_size' => 25,
-            'page_size_param' => null,
-            'entity_class' => \Onboarding\Entity\Account::class,
-            'collection_class' => \Onboarding\V1\Rest\Account\AccountCollection::class,
-            'service_name' => 'Account',
-        ],
-        'Onboarding\\V1\\Rest\\Character\\Controller' => [
-            'listener' => \Onboarding\V1\Rest\Character\CharacterResource::class,
-            'route_name' => 'onboarding.rest.doctrine.character',
-            'route_identifier_name' => 'character_id',
-            'entity_identifier_name' => 'id',
-            'collection_name' => 'character',
-            'entity_http_methods' => [
-                0 => 'GET',
-            ],
-            'collection_http_methods' => [
-                0 => 'GET',
-            ],
-            'collection_query_whitelist' => [],
-            'page_size' => 25,
-            'page_size_param' => null,
-            'entity_class' => \Onboarding\Entity\Character::class,
-            'collection_class' => \Onboarding\V1\Rest\Character\CharacterCollection::class,
-            'service_name' => 'Character',
-        ],
     ],
     'zf-content-negotiation' => [
         'controllers' => [
-            'Onboarding\\V1\\Rest\\Account\\Controller' => 'HalJson',
-            'Onboarding\\V1\\Rest\\Character\\Controller' => 'HalJson',
             'Onboarding\\V1\\Rpc\\Register\\Controller' => 'Json',
             'Onboarding\\V1\\Rpc\\Verify\\Controller' => 'Json',
             'Onboarding\\V1\\Rpc\\Reset\\Controller' => 'Json',
+            'Onboarding\\V1\\Rpc\\Resend\\Controller' => 'Json',
+            'Onboarding\\V1\\Rpc\\ResetWithToken\\Controller' => 'Json',
         ],
         'accept_whitelist' => [
-            'Onboarding\\V1\\Rest\\Account\\Controller' => [
-                0 => 'application/vnd.onboarding.v1+json',
-                1 => 'application/hal+json',
-                2 => 'application/json',
-            ],
-            'Onboarding\\V1\\Rest\\Character\\Controller' => [
-                0 => 'application/vnd.onboarding.v1+json',
-                1 => 'application/hal+json',
-                2 => 'application/json',
-            ],
             'Onboarding\\V1\\Rpc\\Register\\Controller' => [
                 0 => 'application/vnd.onboarding.v1+json',
                 1 => 'application/json',
@@ -172,20 +127,22 @@ return [
                 2 => 'application/*+json',
             ],
             'Onboarding\\V1\\Rpc\\Reset\\Controller' => [
+                0 => 'application/vnd.onboarding.v1+json',
+                1 => 'application/json',
+                2 => 'application/*+json',
+            ],
+            'Onboarding\\V1\\Rpc\\Resend\\Controller' => [
+                0 => 'application/vnd.onboarding.v1+json',
+                1 => 'application/json',
+                2 => 'application/*+json',
+            ],
+            'Onboarding\\V1\\Rpc\\ResetWithToken\\Controller' => [
                 0 => 'application/vnd.onboarding.v1+json',
                 1 => 'application/json',
                 2 => 'application/*+json',
             ],
         ],
         'content_type_whitelist' => [
-            'Onboarding\\V1\\Rest\\Account\\Controller' => [
-                0 => 'application/vnd.onboarding.v1+json',
-                1 => 'application/json',
-            ],
-            'Onboarding\\V1\\Rest\\Character\\Controller' => [
-                0 => 'application/vnd.onboarding.v1+json',
-                1 => 'application/json',
-            ],
             'Onboarding\\V1\\Rpc\\Register\\Controller' => [
                 0 => 'application/vnd.onboarding.v1+json',
                 1 => 'application/json',
@@ -195,6 +152,14 @@ return [
                 1 => 'application/json',
             ],
             'Onboarding\\V1\\Rpc\\Reset\\Controller' => [
+                0 => 'application/vnd.onboarding.v1+json',
+                1 => 'application/json',
+            ],
+            'Onboarding\\V1\\Rpc\\Resend\\Controller' => [
+                0 => 'application/vnd.onboarding.v1+json',
+                1 => 'application/json',
+            ],
+            'Onboarding\\V1\\Rpc\\ResetWithToken\\Controller' => [
                 0 => 'application/vnd.onboarding.v1+json',
                 1 => 'application/json',
             ],
@@ -228,43 +193,11 @@ return [
     ],
     'zf-apigility' => [
         'doctrine-connected' => [
-            \Onboarding\V1\Rest\Account\AccountResource::class => [
-                'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
-                'hydrator' => 'Onboarding\\V1\\Rest\\Account\\AccountHydrator',
-            ],
-            \Onboarding\V1\Rest\Character\CharacterResource::class => [
-                'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
-                'hydrator' => 'Onboarding\\V1\\Rest\\Character\\CharacterHydrator',
-            ],
         ],
     ],
     'doctrine-hydrator' => [
-        'Onboarding\\V1\\Rest\\Account\\AccountHydrator' => [
-            'entity_class' => \Onboarding\Entity\Account::class,
-            'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
-            'by_value' => false,
-            'strategies' => [
-                'characters' => \ZF\Doctrine\Hydrator\Strategy\CollectionExtract::class,
-            ],
-            'use_generated_hydrator' => true,
-        ],
-        'Onboarding\\V1\\Rest\\Character\\CharacterHydrator' => [
-            'entity_class' => \Onboarding\Entity\Character::class,
-            'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
-            'by_value' => false,
-            'strategies' => [
-                'account' => \ZF\Doctrine\Hydrator\Strategy\EntityLink::class,
-            ],
-            'use_generated_hydrator' => true,
-        ],
     ],
     'zf-content-validation' => [
-        'Onboarding\\V1\\Rest\\Account\\Controller' => [
-            'input_filter' => 'Onboarding\\V1\\Rest\\Account\\Validator',
-        ],
-        'Onboarding\\V1\\Rest\\Character\\Controller' => [
-            'input_filter' => 'Onboarding\\V1\\Rest\\Character\\Validator',
-        ],
         'Onboarding\\V1\\Rpc\\Register\\Controller' => [
             'input_filter' => 'Onboarding\\V1\\Rpc\\Register\\Validator',
         ],
@@ -274,57 +207,14 @@ return [
         'Onboarding\\V1\\Rpc\\Reset\\Controller' => [
             'input_filter' => 'Onboarding\\V1\\Rpc\\Reset\\Validator',
         ],
+        'Onboarding\\V1\\Rpc\\Resend\\Controller' => [
+            'input_filter' => 'Onboarding\\V1\\Rpc\\Resend\\Validator',
+        ],
+        'Onboarding\\V1\\Rpc\\ResetWithToken\\Controller' => [
+            'input_filter' => 'Onboarding\\V1\\Rpc\\ResetWithToken\\Validator',
+        ],
     ],
     'input_filter_specs' => [
-        'Onboarding\\V1\\Rest\\Account\\Validator' => [
-            0 => [
-                'name' => 'email',
-                'required' => true,
-                'filters' => [
-                    0 => [
-                        'name' => \Zend\Filter\StringTrim::class,
-                    ],
-                    1 => [
-                        'name' => \Zend\Filter\StripTags::class,
-                    ],
-                ],
-                'validators' => [],
-            ],
-        ],
-        'Onboarding\\V1\\Rest\\Character\\Validator' => [
-            0 => [
-                'name' => 'account',
-                'required' => true,
-                'filters' => [
-                    0 => [
-                        'name' => \Zend\Filter\StringTrim::class,
-                    ],
-                    1 => [
-                        'name' => \Zend\Filter\StripTags::class,
-                    ],
-                ],
-                'validators' => [],
-            ],
-            1 => [
-                'name' => 'name',
-                'required' => true,
-                'filters' => [
-                    0 => [
-                        'name' => \Zend\Filter\StringTrim::class,
-                    ],
-                    1 => [
-                        'name' => \Zend\Filter\StripTags::class,
-                    ],
-                ],
-                'validators' => [],
-            ],
-            2 => [
-                'name' => 'createdOn',
-                'required' => true,
-                'filters' => [],
-                'validators' => [],
-            ],
-        ],
         'Onboarding\\V1\\Rpc\\Register\\Validator' => [
             0 => [
                 'required' => true,
@@ -366,14 +256,127 @@ return [
                 'required' => true,
             ],
         ],
-        'Onboarding\\V1\\Rpc\\Verify\\Validator' => [],
+        'Onboarding\\V1\\Rpc\\Verify\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Zend\Validator\EmailAddress::class,
+                        'options' => [],
+                    ],
+                    1 => [
+                        'name' => \Onboarding\Validator\ObjectExists::class,
+                        'options' => [
+                            'object_repository' => \Onboarding\Entity\Account::class,
+                            'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
+                            'fields' => [
+                                0 => 'email',
+                            ],
+                            'message' => 'We couldn\'t find your account with that email.',
+                        ],
+                    ],
+                    2 => [
+                        'name' => \Onboarding\Validator\ObjectExists::class,
+                        'options' => [
+                            'object_repository' => \Application\Entity\Account::class,
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'fields' => [
+                                0 => 'email',
+                            ],
+                            'message' => 'We couldn\'t find your account with that email.',
+                        ],
+                    ],
+                ],
+                'filters' => [],
+                'name' => 'email',
+                'description' => 'The email address.',
+            ],
+        ],
         'Onboarding\\V1\\Rpc\\Reset\\Validator' => [
             0 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Zend\Validator\EmailAddress::class,
+                        'options' => [],
+                    ],
+                    1 => [
+                        'name' => \Onboarding\Validator\ObjectExists::class,
+                        'options' => [
+                            'object_repository' => \Onboarding\Entity\Account::class,
+                            'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
+                            'fields' => [
+                                0 => 'email',
+                            ],
+                            'message' => 'We couldn\'t find your account with that email.',
+                        ],
+                    ],
+                    2 => [
+                        'name' => \Onboarding\Validator\ObjectExists::class,
+                        'options' => [
+                            'object_repository' => \Application\Entity\Account::class,
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'fields' => [
+                                0 => 'email',
+                            ],
+                            'message' => 'We couldn\'t find your account with that email.',
+                        ],
+                    ],
+                ],
+                'filters' => [],
+                'name' => 'email',
+                'description' => 'The email address.',
+                'field_type' => 'string',
+            ],
+        ],
+        'Onboarding\\V1\\Rpc\\Resend\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Zend\Validator\EmailAddress::class,
+                        'options' => [],
+                    ],
+                    1 => [
+                        'name' => \Onboarding\Validator\ObjectExists::class,
+                        'options' => [
+                            'object_repository' => \Onboarding\Entity\Account::class,
+                            'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
+                            'fields' => [
+                                0 => 'email',
+                            ],
+                            'message' => 'We couldn\'t find your account with that email.',
+                        ],
+                    ],
+                    2 => [
+                        'name' => \Onboarding\Validator\ObjectExists::class,
+                        'options' => [
+                            'object_repository' => \Application\Entity\Account::class,
+                            'object_manager' => 'doctrine.entitymanager.orm_default',
+                            'fields' => [
+                                0 => 'email',
+                            ],
+                            'message' => 'We couldn\'t find your account with that email.',
+                        ],
+                    ],
+                ],
+                'filters' => [],
+                'name' => 'email',
+            ],
+        ],
+        'Onboarding\\V1\\Rpc\\ResetWithToken\\Validator' => [
+            0 => [
                 'required' => false,
-                'validators' => [],
+                'validators' => [
+                    0 => [
+                        'name' => \Zend\Validator\NotEmpty::class,
+                        'options' => [],
+                    ],
+                ],
                 'filters' => [],
                 'name' => 'password',
-                'description' => 'The password.',
+                'field_type' => 'string',
+                'continue_if_empty' => true,
             ],
         ],
     ],
@@ -383,6 +386,8 @@ return [
             'Onboarding\\V1\\Rpc\\Verify\\Controller' => \Onboarding\V1\Rpc\Verify\VerifyControllerFactory::class,
             'Onboarding\\V1\\Rpc\\Reset\\Controller' => \Onboarding\V1\Rpc\Reset\ResetControllerFactory::class,
             \Onboarding\Controller\ConsoleController::class => \Onboarding\Controller\ConsoleControllerFactory::class,
+            'Onboarding\\V1\\Rpc\\Resend\\Controller' => \Onboarding\V1\Rpc\Resend\ResendControllerFactory::class,
+            'Onboarding\\V1\\Rpc\\ResetWithToken\\Controller' => \Onboarding\V1\Rpc\ResetWithToken\ResetWithTokenControllerFactory::class,
         ],
     ],
     'zf-rpc' => [
@@ -406,6 +411,20 @@ return [
                 0 => 'POST',
             ],
             'route_name' => 'onboarding.rpc.reset',
+        ],
+        'Onboarding\\V1\\Rpc\\Resend\\Controller' => [
+            'service_name' => 'resend',
+            'http_methods' => [
+                0 => 'POST',
+            ],
+            'route_name' => 'onboarding.rpc.resend',
+        ],
+        'Onboarding\\V1\\Rpc\\ResetWithToken\\Controller' => [
+            'service_name' => 'resetWithToken',
+            'http_methods' => [
+                0 => 'POST',
+            ],
+            'route_name' => 'onboarding.rpc.reset-with-token',
         ],
     ],
 ];

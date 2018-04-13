@@ -12,6 +12,7 @@ class Email extends Entity
 {
     const NAME_SITE_REGISTER_VERIFY = 'site-register-verify';
     const NAME_SERVER_REGISTER_VERIFY = 'server-register-verify';
+    const NAME_SITE_PASSWORD_RESET = 'site-password-reset';
 
     /**
      * @ORM\Column(type="string")

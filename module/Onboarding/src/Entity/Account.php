@@ -10,6 +10,7 @@ use DateTime;
 /**
  * @ORM\Entity
  * @ORM\Table(name="accounts", schema="dbo")
+ * @ORM\Table(name="`dbo.accounts`")
  * @ORM\HasLifecycleCallbacks
  */
 class Account
