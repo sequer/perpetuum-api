@@ -257,40 +257,6 @@ return [
             ],
         ],
         'Onboarding\\V1\\Rpc\\Verify\\Validator' => [
-            0 => [
-                'required' => true,
-                'validators' => [
-                    0 => [
-                        'name' => \Zend\Validator\EmailAddress::class,
-                        'options' => [],
-                    ],
-                    1 => [
-                        'name' => \Onboarding\Validator\ObjectExists::class,
-                        'options' => [
-                            'object_repository' => \Onboarding\Entity\Account::class,
-                            'object_manager' => 'doctrine.entitymanager.orm_sqlsrv',
-                            'fields' => [
-                                0 => 'email',
-                            ],
-                            'message' => 'We couldn\'t find your account with that email.',
-                        ],
-                    ],
-                    2 => [
-                        'name' => \Onboarding\Validator\ObjectExists::class,
-                        'options' => [
-                            'object_repository' => \Application\Entity\Account::class,
-                            'object_manager' => 'doctrine.entitymanager.orm_default',
-                            'fields' => [
-                                0 => 'email',
-                            ],
-                            'message' => 'We couldn\'t find your account with that email.',
-                        ],
-                    ],
-                ],
-                'filters' => [],
-                'name' => 'email',
-                'description' => 'The email address.',
-            ],
         ],
         'Onboarding\\V1\\Rpc\\Reset\\Validator' => [
             0 => [
