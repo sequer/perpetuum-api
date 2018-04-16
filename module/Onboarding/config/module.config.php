@@ -87,6 +87,16 @@ return [
                         ],
                     ],
                 ],
+                'translate' => [
+                    'type' => 'simple',
+                    'options' => [
+                        'route' => 'translate',
+                        'defaults' => [
+                            'controller' => \Onboarding\Controller\ConsoleController::class,
+                            'action' => 'translate',
+                        ],
+                    ],
+                ],
             ],
         ],
     ],

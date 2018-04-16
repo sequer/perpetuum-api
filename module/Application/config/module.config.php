@@ -45,6 +45,9 @@ return [
         ],
     ],
     'service_manager' => [
+        'invokables' => [
+            \Application\Doctrine\Hydrator\Strategy\DateTimeExtractStrategy::class,
+        ],
         'factories' => [
             'SparkPost' => Service\SparkPostFactory::class,
             'Mailgun' => Service\MailgunFactory::class,

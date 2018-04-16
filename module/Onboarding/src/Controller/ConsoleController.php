@@ -179,22 +179,21 @@ class ConsoleController extends AbstractActionController
         }
     }
 
+    /**
+     * Grab killreports from Perpetuum server and convert them to REST API kills.
+     */
     public function killAction()
     {
-        // $dictionaryData = file_get_contents(__DIR__.'/../../../../data/gbf/dictionary.txt');
-        // $dictionary = $this->unpackGenxy($dictionaryData);
-        // dump($dictionary);
-        // exit;
-
         $query = $this->perpetuumEntityManager->createQueryBuilder()
             ->select('k')
             ->from(PerpetuumKill::class, 'k')
             ->andWhere('k.occuredOn > ?1')
+            ->andWhere('k.occuredOn < ?2')
             ->orderBy('k.occuredOn', 'DESC')
             ->getQuery();
-        $query->setParameter(1, new DateTime('-100 week'));
+        $query->setParameter(1, new DateTime('-2 weeks'));
+        $query->setParameter(2, new DateTime('-15 minutes'));
         $result = $query->iterate();
-
 
         foreach ($result as $row) {
             $perpetuumKill = $row[0];
@@ -203,7 +202,7 @@ class ConsoleController extends AbstractActionController
                 'uid' => $perpetuumKill->getUid(),
             ]);
             if ($kill) {
-                // continue;
+                continue;
             }
 
             $data = $this->unpackGenxy($perpetuumKill->getData());
@@ -231,9 +230,17 @@ class ConsoleController extends AbstractActionController
             $this->entityManager->flush();
 
             foreach ($enrichedData['attackers'] as $attackerData) {
+                dump($attackerData);
+
                 $attacker = new Killboard\Attacker();
                 $attacker->setKill($kill);
                 $attacker->setDamageDealt($attackerData['damageDone']);
+                $attacker->setTotalEcmAttempts($attackerData['jammerTotal']);
+                $attacker->setSuccessfullEcmAttempts($attackerData['jammer']);
+                $attacker->setDemobilisations($attackerData['demobilizer']);
+                $attacker->setSensorSuppressions($attackerData['suppressor']);
+                $attacker->setEnergyDispersed($attackerData['dispersion']);
+                $attacker->setHasKillingBlow($attackerData['killingBlow'] === 1);
                 $this->entityManager->persist($attacker);
 
                 $agent = $this->upsertEntity(Killboard\Agent::class, $attackerData['characterID']);
@@ -252,18 +259,37 @@ class ConsoleController extends AbstractActionController
                 $this->entityManager->flush();
             }
 
-            dump($enrichedData);
-            dump($kill);
-
-            // dump($kill->getData());
-            // dump($data);
-            // dump($enrichedData);
-
             $this->entityManager->clear();
         }
     }
 
-    private function upsertEntity($className, $identifier) // move to factory
+    /**
+     * Find untranslated entities, and use an dictionary file to give them the correct names.
+     */
+    public function translateAction()
+    {
+        $dictionaryData = file_get_contents(__DIR__.'/../../../../data/gbf/dictionary.txt');
+        $dictionary = $this->unpackGenxy($dictionaryData);
+        $dictionary = $dictionary['dictionary'];
+
+        foreach ([
+            Killboard\Robot::class,
+            Killboard\Zone::class,
+        ] as $className) {
+            $entities = $this->entityManager->getRepository($className)->findBy(['name' => null]);
+            foreach ($entities as $entity) {
+                $entity->setName($dictionary[$entity->getDefinition()]);
+                dump('Updated entity ('.$entity->getName().').');
+            }
+        }
+
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Create or update killboard entities. Move to factory at some point.
+     */
+    private function upsertEntity($className, $identifier)
     {
         if ($className === Killboard\Agent::class) {
             $result = $this->entityManager->getRepository($className)->findOneBy([

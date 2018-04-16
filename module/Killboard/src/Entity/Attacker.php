@@ -10,6 +10,16 @@ use Doctrine\ORM\Mapping as ORM;
 class Attacker extends Entity
 {
     /**
+     * @ORM\Column(type="decimal", precision=16, scale=4)
+     */
+    private $damageDealt = 0.0000;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $hasKillingBlow = false;
+
+    /**
      * @ORM\Column(type="integer")
      */
     private $totalEcmAttempts = 0;
@@ -33,21 +43,6 @@ class Attacker extends Entity
      * @ORM\Column(type="decimal", precision=16, scale=4)
      */
     private $energyDispersed = 0.0000;
-
-    /**
-     * @ORM\Column(type="decimal", precision=16, scale=4)
-     */
-    private $damageDealt = 0.0000;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $hasKillingBlow = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $hasMostDamage = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Kill", inversedBy="attackers")
@@ -83,7 +78,65 @@ class Attacker extends Entity
         return $this->damageDealt;
     }
 
+    public function setHasKillingBlow($hasKillingBlow)
+    {
+        $this->hasKillingBlow = $hasKillingBlow;
+    }
 
+    public function getHasKillingBlow()
+    {
+        return $this->hasKillingBlow;
+    }
+
+    public function setTotalEcmAttempts($totalEcmAttempts)
+    {
+        $this->totalEcmAttempts = $totalEcmAttempts;
+    }
+
+    public function getTotalEcmAttempts()
+    {
+        return $this->totalEcmAttempts;
+    }
+
+    public function setSuccessfullEcmAttempts($successfulEcmAttempts)
+    {
+        $this->successfulEcmAttempts = $successfulEcmAttempts;
+    }
+
+    public function getSuccessfullEcmAttempts()
+    {
+        return $this->successfulEcmAttempts;
+    }
+
+    public function setDemobilisations($demobilisations)
+    {
+        $this->demobilisations = $demobilisations;
+    }
+
+    public function getDemobilisation()
+    {
+        return $this->demobilisations;
+    }
+
+    public function setSensorSuppressions($sensorSuppressions)
+    {
+        return $this->sensorSuppressions;
+    }
+
+    public function getSensorSuppressions()
+    {
+        return $this->sensorSuppressions;
+    }
+
+    public function setEnergyDispersed($energyDispersed)
+    {
+        $this->energyDispersed = $energyDispersed;
+    }
+
+    public function getEnergyDispersed()
+    {
+        return $this->energyDispersed;
+    }
 
     public function setKill(Kill $kill)
     {
