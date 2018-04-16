@@ -49,7 +49,7 @@ class ResetController extends AbstractActionController
         try {
             $response = $this->mailer->sendPasswordResetMail($token);
             $email->setSentOn(new DateTime('now'));
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             // do nothing
         }
 

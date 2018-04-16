@@ -35,7 +35,10 @@
         "guzzlehttp/guzzle": "^6.3",
         "php-http/guzzle6-adapter": "^1.1",
         "sparkpost/sparkpost": "^2.1",
-        "zfcampus/zf-api-problem": "^1.2"
+        "zfcampus/zf-api-problem": "^1.2",
+        "mailgun/mailgun-php": "^2.5",
+        "php-http/curl-client": "^1.7",
+        "guzzlehttp/psr7": "^1.4"
     },
     "require-dev": {
         "zendframework/zend-developer-tools": "^1.1",

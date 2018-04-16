@@ -5,4 +5,5 @@ use ZF\Apigility\Doctrine\Server\Resource\DoctrineResource;
 
 class AttackerResource extends DoctrineResource
 {
+
 }

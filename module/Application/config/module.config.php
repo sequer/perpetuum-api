@@ -47,6 +47,7 @@ return [
     'service_manager' => [
         'factories' => [
             'SparkPost' => Service\SparkPostFactory::class,
+            'Mailgun' => Service\MailgunFactory::class,
             Service\Mailer::class => Service\MailerFactory::class,
         ],
     ],
