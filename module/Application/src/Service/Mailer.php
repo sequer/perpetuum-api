@@ -20,7 +20,8 @@ class Mailer
             'from' => 'no-reply@mail.openperpetuum.com',
             'to' => $token->getAccount()->getEmail(),
             'subject' => 'Activate your Open Perpetuum account',
-            'text' => 'Hi there! You have recently registered an account to Open Perpetuum at this email address. To verify your email address, copy and paste the following link in your browser: https://register.openperpetuum.com/verify/'.$token->getHash().'. Welcome to Perpetuum, Agent!',
+            'text' => 'Hi there!\n\nYou have recently registered an account to Open Perpetuum at this email address. To verify your email address, copy and paste the following link in your browser:\n\nhttps://register.openperpetuum.com/verify/'.$token->getHash().'\n\nWelcome to Perpetuum, Agent!',
+            'html' => 'Hi there!<br/><br/>You have recently registered an account to Open Perpetuum at this email address. To verify your email address, copy and paste the following link in your browser:<br/><br/>https://register.openperpetuum.com/verify/'.$token->getHash().'<br/><br/>Welcome to Perpetuum, Agent!',
         ]);
 
         // return $this->sparkPost->transmissions->post([
@@ -55,7 +56,8 @@ class Mailer
             'from' => 'no-reply@mail.openperpetuum.com',
             'to' => $token->getAccount()->getEmail(),
             'subject' => 'Reset your password',
-            'text' => 'Hi there! You have recently requested to have your password reset for your Open Perpetuum account. To verify your email address, copy and paste the following link in your browser: https://register.openperpetuum.com/reset-password/'.$token->getHash().'. This link will be valid for one hour.',
+            'text' => 'Hi there!\n\nYou have recently requested to have your password reset for your Open Perpetuum account. To verify your email address, copy and paste the following link in your browser:\n\nhttps://register.openperpetuum.com/reset-password/'.$token->getHash().'\n\nThis link will be valid for one hour.',
+            'html' => 'Hi there!<br/><br/>You have recently requested to have your password reset for your Open Perpetuum account. To verify your email address, copy and paste the following link in your browser:<br/><br/>https://register.openperpetuum.com/reset-password/'.$token->getHash().'<br/><br/>This link will be valid for one hour.',
         ]);
 
         // return $this->sparkPost->transmissions->post([
